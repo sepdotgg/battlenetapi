@@ -3,7 +3,14 @@
  */
 package gg.sep.battlenet;
 
+/**
+ * Quick Library class to stand up the project.
+ */
 public class Library {
+    /**
+     * Library method.
+     * @return Always returns {@code true}.
+     */
     public boolean someLibraryMethod() {
         return true;
     }

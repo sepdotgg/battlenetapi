@@ -1,5 +1,8 @@
 plugins {
     id 'java-library'
+    id 'checkstyle'
+    id 'com.github.spotbugs' version '2.0.0'
+    id 'jacoco'
 }
 
 group 'gg.sep'
@@ -7,11 +10,71 @@ version '0.1.0-SNAPSHOT'
 
 repositories {
     jcenter()
+    maven { url "https://jitpack.io" }
+}
+
+configurations {
+    sepBuildConfig
 }
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+
+    // build dependencies
+    sepBuildConfig "com.github.Seputaes:sep-java-build-config:0.2.0"
+}
+
+task extractFile(type: Copy) {
+    from {
+        zipTree(configurations.sepBuildConfig.singleFile)
+    }
+    into "${buildDir}/"
+    include "configuration/"
+}
+
+checkstyle {
+    ignoreFailures false
+    configFile file("${buildDir}/configuration/checkstyle/checkstyle.xml")
+    configDir file("${buildDir}/configuration/checkstyle")
+    toolVersion '8.22'
+}
+checkstyleMain.dependsOn extractFile
+checkstyleTest.dependsOn extractFile
+
+spotbugs {
+    ignoreFailures false
+    toolVersion '3.1.12'
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports.xml.enabled = false
+    reports.html.enabled = true
+}
+
+jacocoTestReport {
+    reports {
+        html.enabled = true
+        html.destination file("${buildDir}/reports/jacoco/html")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.0 // TODO
+            }
+        }
+    }
+}
+jacocoTestReport.dependsOn test
+check.dependsOn jacocoTestCoverageVerification
+
+// unchecked and deprecation should produce warnings
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
 
 test {

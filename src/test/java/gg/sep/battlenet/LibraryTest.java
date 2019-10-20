@@ -3,14 +3,16 @@
  */
 package gg.sep.battlenet;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import gg.sep.battlenet.Library;
-
+/**
+ * Tests for {@link Library}.
+ */
 class LibraryTest {
     @Test void testSomeLibraryMethod() {
-        Library classUnderTest = new Library();
+        final Library classUnderTest = new Library();
         assertTrue(classUnderTest.someLibraryMethod(), "someLibraryMethod should return 'true'");
     }
 }
