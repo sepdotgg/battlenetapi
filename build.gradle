@@ -2,6 +2,9 @@ plugins {
     id 'java-library'
 }
 
+group 'gg.sep'
+version '0.1.0-SNAPSHOT'
+
 repositories {
     jcenter()
 }
