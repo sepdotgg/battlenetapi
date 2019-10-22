@@ -29,6 +29,7 @@ dependencies {
     // test dependencies
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    testImplementation "org.mockito:mockito-core:3.0.0"
 
     // build dependencies
     sepBuildConfig "com.github.Seputaes:sep-java-build-config:0.2.0"
@@ -75,7 +76,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.0 // TODO
+                minimum = 0.95
             }
         }
     }
