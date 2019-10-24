@@ -35,7 +35,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import gg.sep.battlenet.BattleNet;
-import gg.sep.battlenet.model.BattleNetObject;
+import gg.sep.battlenet.model.BattleNetEntity;
 
 /**
  * Tests for {@link BattleNetAPIProxy}.
@@ -44,10 +44,10 @@ import gg.sep.battlenet.model.BattleNetObject;
 public class BattleNetAPIProxyTest {
 
     private BattleNetAPIProxy getProxy(final BattleNet mockBattleNet, final Call mockCall,
-                                       final BattleNetObject mockObject, final int maxThrottleRetries,
+                                       final BattleNetEntity mockObject, final int maxThrottleRetries,
                                        final int responseCode, final boolean succeedAfter) throws Exception {
         final Request mockRequest = Mockito.mock(Request.class);
-        final Response<BattleNetObject> mockResponse = Mockito.mock(Response.class);
+        final Response<BattleNetEntity> mockResponse = Mockito.mock(Response.class);
         final HttpUrl httpUrl = HttpUrl.get("https://sep.gg");
 
         Mockito.when(mockCall.clone()).thenReturn(mockCall);
@@ -70,7 +70,7 @@ public class BattleNetAPIProxyTest {
 
     @Test
     void getResponse_HitMaxRetries_ThrowsException() throws Exception {
-        final Call<BattleNetObject> mockCall = Mockito.mock(Call.class);
+        final Call<BattleNetEntity> mockCall = Mockito.mock(Call.class);
         final BattleNet mockBattleNet = Mockito.mock(BattleNet.class);
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, null, 2,
             429, false);
@@ -81,13 +81,13 @@ public class BattleNetAPIProxyTest {
 
     @Test
     void getResponse_GetsThrottled_SucceedsNextTry() throws Exception {
-        final BattleNetObject mockObject = Mockito.mock(BattleNetObject.class);
-        final Call<BattleNetObject> mockCall = Mockito.mock(Call.class);
+        final BattleNetEntity mockObject = Mockito.mock(BattleNetEntity.class);
+        final Call<BattleNetEntity> mockCall = Mockito.mock(Call.class);
         final BattleNet mockBattleNet = Mockito.mock(BattleNet.class);
 
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, mockObject, 4, 429,
             true);
-        final Optional<BattleNetObject> responseObject = proxy.getResponse(mockCall);
+        final Optional<BattleNetEntity> responseObject = proxy.getResponse(mockCall);
         Assertions.assertTrue(responseObject.isPresent());
         Assertions.assertEquals(mockObject, responseObject.get());
         Mockito.verify(mockObject, Mockito.times(1)).setBattleNet(Mockito.eq(mockBattleNet));
@@ -96,13 +96,13 @@ public class BattleNetAPIProxyTest {
 
     @Test
     void getResponse_ReturnsObject() throws Exception {
-        final BattleNetObject mockObject = Mockito.mock(BattleNetObject.class);
-        final Call<BattleNetObject> mockCall = Mockito.mock(Call.class);
+        final BattleNetEntity mockObject = Mockito.mock(BattleNetEntity.class);
+        final Call<BattleNetEntity> mockCall = Mockito.mock(Call.class);
         final BattleNet mockBattleNet = Mockito.mock(BattleNet.class);
 
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, mockObject, 1, 200,
             false);
-        final Optional<BattleNetObject> responseObject = proxy.getResponse(mockCall);
+        final Optional<BattleNetEntity> responseObject = proxy.getResponse(mockCall);
 
         Assertions.assertTrue(responseObject.isPresent());
         Assertions.assertEquals(mockObject, responseObject.get());

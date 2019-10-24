@@ -32,7 +32,7 @@ import lombok.extern.log4j.Log4j2;
 import retrofit2.Call;
 
 import gg.sep.battlenet.BattleNet;
-import gg.sep.battlenet.model.BattleNetObject;
+import gg.sep.battlenet.model.BattleNetEntity;
 
 /**
  * Abstract class which is the basis for each of the individual Battle.net API classes.
@@ -47,7 +47,7 @@ public abstract class BattleNetAPI {
     private final BattleNet battleNet;
 
     /**
-     * Executes the API call and converts the response body into the {@link BattleNetObject}.
+     * Executes the API call and converts the response body into the {@link BattleNetEntity}.
      *
      * If there was an error or parsing was unsuccessful, the error will be logged and this method
      * will return an empty {@link Optional}, otherwise will return an {@link Optional} of the API object.
@@ -56,7 +56,7 @@ public abstract class BattleNetAPI {
      * @param <T> Type of the API response object that is expected to be returned from the API call.
      * @return Optional of type {@code T}, which represents the API response object.
      */
-    protected <T extends BattleNetObject> Optional<T> executeCall(final Call<T> call) {
+    protected <T extends BattleNetEntity> Optional<T> executeCall(final Call<T> call) {
         try {
             return battleNet.getProxy().getResponse(call);
         } catch (final IOException e) {

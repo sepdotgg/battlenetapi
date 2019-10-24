@@ -22,25 +22,17 @@
 
 package gg.sep.battlenet.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import gg.sep.battlenet.BattleNet;
 
 /**
- * Represents any one of the object responses from the Battle.net API.
+ * Abstract and base implementation of {@link BattleNetEntity}.
  *
- * <p>Used so we can infer the type of our API models and assign a reference to the Battle.net client instance.
- * This is useful for writing {@code BattleNetObject} subclass which themselves can call back into the API, eg,
- * retrieving one of the keyed full objects. // TODO link to keyed
+ * Implements the base Getter and Setter for the {@link BattleNet} reference.
  */
-public interface BattleNetObject {
-    /**
-     * Returns the {@link BattleNet} client instance used to retrieve the object.
-     * @return The {@link BattleNet} client instance used to retrieve the object.
-     */
-    BattleNet getBattleNet();
-
-    /**
-     * Sets the {@link BattleNet} client instance used to retrieve the object.
-     * @param battleNet The {@link BattleNet} client instance used to retrieve the object.
-     */
-    void setBattleNet(BattleNet battleNet);
+public abstract class AbstractBattleNetEntity implements BattleNetEntity {
+    @Getter @Setter
+    private BattleNet battleNet;
 }

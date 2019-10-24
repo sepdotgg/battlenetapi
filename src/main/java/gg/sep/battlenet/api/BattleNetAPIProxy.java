@@ -32,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import gg.sep.battlenet.BattleNet;
-import gg.sep.battlenet.model.BattleNetObject;
+import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.util.Waits;
 
 /**
@@ -79,7 +79,7 @@ public final class BattleNetAPIProxy {
      * @return An optional of the response if successful, or empty if error.
      * @throws IOException Thrown by {@code Retrofit} if the call fails for some IO reason.
      */
-    public <T extends BattleNetObject> Optional<T> getResponse(final Call<T> call) throws IOException {
+    public <T extends BattleNetEntity> Optional<T> getResponse(final Call<T> call) throws IOException {
         return getResponse(call, 0);
     }
 
@@ -92,7 +92,7 @@ public final class BattleNetAPIProxy {
      * @return An optional of the response if successful, or empty if error.
      * @throws IOException Thrown by {@code Retrofit} if the call fails for some IO reason.
      */
-    private <T extends BattleNetObject> Optional<T> getResponse(final Call<T> call,
+    private <T extends BattleNetEntity> Optional<T> getResponse(final Call<T> call,
                                                                 final long prevCount) throws IOException {
         final double waitTimeMs = this.rateLimiter.acquire() * 1000; // acquire a permit and convert it to millis
         final Response<T> apiResponse = call.execute();
