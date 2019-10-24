@@ -21,7 +21,12 @@
  */
 package gg.sep.battlenet;
 
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import okhttp3.OkHttpClient;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import gg.sep.battlenet.api.BattleNetAPIProxy;
 
 /**
  * Provides access to the Battle.net APIs.
@@ -31,8 +36,31 @@ import lombok.RequiredArgsConstructor;
  * <p>Client IDs and secrets are created by registering an application on the Battle.net developer portal:
  * https://develop.battle.net/documentation/guides/getting-started
  */
-@RequiredArgsConstructor
 public class BattleNet {
-    private final transient String clientId;
-    private final transient String clientSecret;
+    private static final String BATTLENET_API_BASE_URL = "https://us.api.blizzard.com/"; // TODO: Support regions
+
+    @Getter private final BattleNetAPIProxy proxy;
+    @Getter private final Retrofit retrofit = initRetrofit();
+
+    /**
+     * Create a new instance of the Battle.net API client using the specified application Client ID and secret.
+     * @param clientId Client ID of the Battle.net API application.
+     * @param clientSecret Client Secret key of the Battle.net API application.
+     */
+    public BattleNet(final String clientId, final String clientSecret) {
+        this.proxy = new BattleNetAPIProxy(this);
+    }
+
+    /**
+     * Build an instance of the default {@link Retrofit} API library for the Battle.net API.
+     * @return Completed instance of the Retrofit API library.
+     */
+    private Retrofit initRetrofit() {
+        final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+        return new Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(httpClientBuilder.build())
+            .baseUrl(BATTLENET_API_BASE_URL)
+            .build();
+    }
 }
