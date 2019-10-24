@@ -23,7 +23,7 @@
 package gg.sep.battlenet.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.Optional;
 
@@ -83,13 +83,13 @@ public class OAuthAPITest extends APITest {
         final BattleNet battleNet = setupBattleNet(unparsable);
         final OAuthAPI oAuthAPI = basicAPI(unparsable, battleNet.getRetrofit().baseUrl());
         final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertTrue(token.isEmpty());
+        assertFalse(token.isPresent());
     }
 
     @Test void getToken_IOError_ReturnsEmpty() {
         // invalid URL that won't be able to resolve DNS
         final OAuthAPI oAuthAPI = basicAPI(null, HttpUrl.get("https://willnotrespond.tld"));
         final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertTrue(token.isEmpty());
+        assertFalse(token.isPresent());
     }
 }

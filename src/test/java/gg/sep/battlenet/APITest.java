@@ -24,8 +24,8 @@ package gg.sep.battlenet;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -51,7 +51,7 @@ public abstract class APITest {
             .json(responseEntity)
             .build();
 
-        enqueueAndStart(mockWebServer, List.of(mockResponse));
+        enqueueAndStart(mockWebServer, ImmutableList.of(mockResponse));
         return mockWebServer.url("/");
     }
 
