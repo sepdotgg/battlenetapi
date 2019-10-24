@@ -31,7 +31,7 @@ import gg.sep.battlenet.BattleNet;
  * This is useful for writing {@code BattleNetObject} subclass which themselves can call back into the API, eg,
  * retrieving one of the keyed full objects. // TODO link to keyed
  */
-public interface BattleNetEntity {
+public interface BattleNetEntity extends JsonSerializable {
     /**
      * Returns the {@link BattleNet} client instance used to retrieve the object.
      * @return The {@link BattleNet} client instance used to retrieve the object.

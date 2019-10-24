@@ -22,17 +22,20 @@
 
 package gg.sep.battlenet.model;
 
-import lombok.Getter;
-import lombok.Setter;
-
-import gg.sep.battlenet.BattleNet;
-
 /**
- * Abstract and base implementation of {@link BattleNetEntity}.
+ * Describes a class which can be serialized to (and from) a JSON string.
  *
- * Implements the base Getter and Setter for the {@link BattleNet} reference.
+ * <p>By default, many of the types present on the object may not be serializable on their own,
+ * and will require a custom type adapter.
+ *
+ * <p>The implementing class should ensure that whatever {@link com.google.gson.Gson} entity is
+ * used to serialize/deserialize has the necessary type adapters.
  */
-public abstract class AbstractBattleNetEntity extends AbstractJsonEntity implements BattleNetEntity, JsonSerializable {
-    @Getter @Setter
-    private BattleNet battleNet;
+public interface JsonSerializable {
+
+    /**
+     * Serializes the object into a JSON string.
+     * @return A JSON string which is a serialized representation of the object's state.
+     */
+    String toJson();
 }
