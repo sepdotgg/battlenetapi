@@ -25,6 +25,7 @@ package gg.sep.battlenet.api;
 import java.io.IOException;
 import java.util.Optional;
 
+import com.google.gson.JsonParseException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +60,7 @@ public abstract class BattleNetAPI {
     protected <T extends BattleNetEntity> Optional<T> executeCall(final Call<T> call) {
         try {
             return battleNet.getProxy().getResponse(call);
-        } catch (final IOException e) {
+        } catch (final IOException | JsonParseException e) {
             log.error(e);
             return Optional.empty();
         }

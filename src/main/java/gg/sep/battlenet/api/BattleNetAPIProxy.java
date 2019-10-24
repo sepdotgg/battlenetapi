@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import com.google.common.util.concurrent.RateLimiter;
+import com.google.gson.JsonParseException;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import retrofit2.Call;
@@ -92,8 +93,9 @@ public final class BattleNetAPIProxy {
      * @return An optional of the response if successful, or empty if error.
      * @throws IOException Thrown by {@code Retrofit} if the call fails for some IO reason.
      */
-    private <T extends BattleNetEntity> Optional<T> getResponse(final Call<T> call,
-                                                                final long prevCount) throws IOException {
+    private <T extends BattleNetEntity> Optional<T> getResponse(final Call<T> call, final long prevCount)
+        throws IOException, JsonParseException {
+
         final double waitTimeMs = this.rateLimiter.acquire() * 1000; // acquire a permit and convert it to millis
         final Response<T> apiResponse = call.execute();
         log.debug("BattleNet API | path={}, rateLimitWaitMs={}", call.request().url().encodedPath(), waitTimeMs);

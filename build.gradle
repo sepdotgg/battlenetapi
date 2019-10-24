@@ -30,12 +30,14 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
     testImplementation "org.mockito:mockito-core:3.0.0"
+    testImplementation("com.squareup.okhttp3:mockwebserver:4.2.1")
 
     // build dependencies
     sepBuildConfig "com.github.Seputaes:sep-java-build-config:0.2.0"
     compileOnly "com.github.spotbugs:spotbugs-annotations:3.1.12"
     compileOnly "org.projectlombok:lombok:1.18.+"
     annotationProcessor "org.projectlombok:lombok:1.18.+"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.+"
 }
 
 task extractFile(type: Copy) {
@@ -76,7 +78,7 @@ jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = 0.80
+                minimum = 0.95
             }
         }
     }
