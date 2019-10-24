@@ -32,7 +32,11 @@ import com.google.gson.Gson;
  */
 public abstract class AbstractJsonEntity implements JsonSerializable {
 
-    private static Gson buildDefaultGson() {
+    /**
+     * Returns a new instance of {@link Gson} which is appropriate for serializing/deserializing operations.
+     * @return A new instance of {@link Gson} which is appropriate for serializing/deserializing operations.
+     */
+    public static Gson defaultGson() {
         return new Gson();
     }
 
@@ -40,7 +44,7 @@ public abstract class AbstractJsonEntity implements JsonSerializable {
      * {@inheritDoc}
      */
     public String toJson() {
-        return buildDefaultGson()
+        return defaultGson()
             .toJson(this);
     }
 }

@@ -27,6 +27,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import gg.sep.battlenet.api.BattleNetAPIProxy;
+import gg.sep.battlenet.model.AbstractJsonEntity;
 
 /**
  * Provides access to the Battle.net APIs.
@@ -58,7 +59,7 @@ public class BattleNet {
     private Retrofit initRetrofit() {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         return new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(AbstractJsonEntity.defaultGson()))
             .client(httpClientBuilder.build())
             .baseUrl(BATTLENET_API_BASE_URL)
             .build();
