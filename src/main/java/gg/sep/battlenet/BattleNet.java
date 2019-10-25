@@ -29,6 +29,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import gg.sep.battlenet.api.BattleNetAPIProxy;
+import gg.sep.battlenet.auth.api.OAuthAPI;
+import gg.sep.battlenet.interceptor.OAuthInterceptor;
 import gg.sep.battlenet.model.AbstractJsonEntity;
 
 /**
@@ -43,8 +45,10 @@ import gg.sep.battlenet.model.AbstractJsonEntity;
 public final class BattleNet {
     private static final String BATTLENET_API_BASE_URL = "https://us.api.blizzard.com/"; // TODO: Support regions
 
-    @Getter private final BattleNetAPIProxy proxy;
-    @Getter private Retrofit retrofit;
+    @Getter
+    private final BattleNetAPIProxy proxy;
+    @Getter
+    private final Retrofit retrofit;
 
     /**
      * Create a new instance of the Battle.net API client using the specified application Client ID and secret.
@@ -56,15 +60,21 @@ public final class BattleNet {
     @Builder
     private BattleNet(final String clientId, final String clientSecret, final HttpUrl baseUrl) {
         this.proxy = new BattleNetAPIProxy(this);
-        this.retrofit = (baseUrl == null) ? initRetrofit() : initRetrofit(baseUrl);
+        final OAuthAPI oAuthAPI = OAuthAPI.builder()
+            .clientId(clientId)
+            .clientSecret(clientSecret)
+            .battleNet(this)
+            .build();
+        this.retrofit = (baseUrl == null) ? initRetrofit(oAuthAPI) : initRetrofit(baseUrl, oAuthAPI);
     }
 
     /**
      * Build an instance of the default {@link Retrofit} API library for the Battle.net API.
      * @return Completed instance of the Retrofit API library.
      */
-    private Retrofit initRetrofit(final HttpUrl baseUrl) {
+    private Retrofit initRetrofit(final HttpUrl baseUrl, final OAuthAPI oAuthAPI) {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+        httpClientBuilder.addInterceptor(new OAuthInterceptor(oAuthAPI));
         return new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(AbstractJsonEntity.defaultGson()))
             .client(httpClientBuilder.build())
@@ -72,7 +82,7 @@ public final class BattleNet {
             .build();
     }
 
-    private Retrofit initRetrofit() {
-        return initRetrofit(HttpUrl.get(BATTLENET_API_BASE_URL));
+    private Retrofit initRetrofit(final OAuthAPI oAuthAPI) {
+        return initRetrofit(HttpUrl.get(BATTLENET_API_BASE_URL), oAuthAPI);
     }
 }

@@ -29,12 +29,16 @@ import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import okhttp3.Credentials;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.api.BattleNetAPI;
 import gg.sep.battlenet.auth.endpoint.OAuthEndpoint;
 import gg.sep.battlenet.auth.model.OAuthToken;
+import gg.sep.battlenet.model.AbstractJsonEntity;
 
 /**
  * This class implements the retrieval of resources at the Battle.net OAuth API endpoint,
@@ -50,9 +54,12 @@ public final class OAuthAPI extends BattleNetAPI {
     private static final String TOKEN_POST_PATH = "oauth/token?grant_type=client_credentials";
 
     private final transient String basicAuthCredentials;
+    private final OAuthEndpoint oAuthEndpoint;
 
-    private OAuthEndpoint oAuthEndpoint;
-    @Getter private HttpUrl baseUrl;
+    @Getter
+    private HttpUrl baseUrl;
+    private Retrofit retrofit;
+
 
     /**
      * Initialize the OAuth API using the specified client ID, secret, and BattleNet instance.
@@ -67,8 +74,21 @@ public final class OAuthAPI extends BattleNetAPI {
     private OAuthAPI(final String clientId, final String clientSecret, final BattleNet battleNet, final HttpUrl baseUrl) {
         super(battleNet);
         this.basicAuthCredentials = Credentials.basic(clientId, clientSecret);
-        this.oAuthEndpoint = battleNet.getRetrofit().create(OAuthEndpoint.class);
+
+        // the order of these initializing is important
         this.baseUrl = (baseUrl == null) ? HttpUrl.get(BATTLE_NET_OAUTH_BASE_URL) : baseUrl;
+        this.retrofit = initOAuthRetrofit(this.baseUrl);
+        this.oAuthEndpoint = this.retrofit.create(OAuthEndpoint.class);
+
+    }
+
+    private Retrofit initOAuthRetrofit(final HttpUrl oAuthBaseUrl) {
+        final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+        return new Retrofit.Builder()
+            .addConverterFactory(GsonConverterFactory.create(AbstractJsonEntity.defaultGson()))
+            .client(httpClientBuilder.build())
+            .baseUrl(oAuthBaseUrl)
+            .build();
     }
 
     /**
