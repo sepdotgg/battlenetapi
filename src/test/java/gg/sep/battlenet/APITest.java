@@ -22,7 +22,6 @@
 
 package gg.sep.battlenet;
 
-import java.io.IOException;
 import java.util.Collection;
 
 import com.google.common.collect.ImmutableList;
@@ -30,7 +29,7 @@ import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
-import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.model.BattleNetEntity;
 
 /**
  * Base abstract class for the various Battle.net API class tests, providing common methods for building test data.
@@ -43,31 +42,28 @@ public abstract class APITest {
      * @param responseEntity JSON serializable entity to be used as the body of the response.
      * @return URL of the web server's URL which will respond to the request.
      */
-    private HttpUrl singleEntityResponse(final JsonSerializable responseEntity) {
-        final MockWebServer mockWebServer = new MockWebServer();
+    private void setupSingleEntityResponse(final MockWebServer mockWebServer, final BattleNetEntity responseEntity) {
 
         final MockResponse mockResponse = new MockResponseBuilder()
             .success()
             .json(responseEntity)
             .build();
 
-        enqueueAndStart(mockWebServer, ImmutableList.of(mockResponse));
-        return mockWebServer.url("/");
+        enqueueResponses(mockWebServer, ImmutableList.of(mockResponse));
+    }
+
+    private MockWebServer buildMockWebServer() {
+        return new MockWebServer();
     }
 
     /**
-     * Enqueues the specified mocked responses to the web server, and starts the server.
+     * Enqueues the specified mocked responses to the web server.
      *
-     * @param webServer MockWebServer to enqueue responses on and start.
+     * @param webServer MockWebServer on which to enqueue responses.
      * @param responses Collection of MockResponses to enqueue on the server.
      */
-    private static void enqueueAndStart(final MockWebServer webServer, final Collection<MockResponse> responses) {
+    private static void enqueueResponses(final MockWebServer webServer, final Collection<MockResponse> responses) {
         responses.forEach(webServer::enqueue);
-        try {
-            webServer.start();
-        } catch (final IOException e) {
-            throw new AssertionError("Failed to start MockWebServer: " + e);
-        }
     }
 
     /**
@@ -77,11 +73,16 @@ public abstract class APITest {
      * @param responseEntity JSON serializable response entity to be returned from the API calls.
      * @return New Battle.net instance which will call a Mocked web server rather than the real API.
      */
-    protected BattleNet setupBattleNet(final JsonSerializable responseEntity) {
-        return BattleNet.builder()
+    protected BattleNet setupBattleNet(final BattleNetEntity responseEntity) {
+        final MockWebServer mockWebServer = buildMockWebServer();
+        final HttpUrl baseUrl = mockWebServer.url("/");
+        final BattleNet battleNet = BattleNet.builder()
             .clientId("")
             .clientSecret("")
-            .baseUrl(singleEntityResponse(responseEntity))
+            .baseUrl(baseUrl)
             .build();
+        responseEntity.setBattleNet(battleNet);
+        setupSingleEntityResponse(mockWebServer, responseEntity);
+        return battleNet;
     }
 }

@@ -29,19 +29,20 @@ import java.util.Optional;
 
 import okhttp3.HttpUrl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import gg.sep.battlenet.APITest;
 import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.auth.model.OAuthToken;
-import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.model.BattleNetEntity;
 
 /**
  * Unit test for {@link gg.sep.battlenet.auth.api.OAuthAPI}.
  */
 public class OAuthAPITest extends APITest {
 
-    private OAuthAPI basicAPI(final JsonSerializable entity, final HttpUrl baseUrl) {
+    private OAuthAPI basicAPI(final BattleNetEntity entity, final HttpUrl baseUrl) {
         final OAuthAPI.OAuthAPIBuilder builder = OAuthAPI.builder()
             .clientId("")
             .clientSecret("")
@@ -53,14 +54,18 @@ public class OAuthAPITest extends APITest {
     }
 
     @Test void builder_WhenBaseUrlNotSet_UsesDefaultBaseUrl() {
-        final OAuthAPI oAuthAPI = basicAPI(null, null);
+        final OAuthToken simpleToken = OAuthToken.builder()
+            .build();
+        final OAuthAPI oAuthAPI = basicAPI(simpleToken, null);
         assertEquals(HttpUrl.get("https://us.battle.net"), oAuthAPI.getBaseUrl());
 
     }
 
     @Test void builder_BaseUrlSet_UsesSetBaseUrl() {
+        final OAuthToken simpleToken = OAuthToken.builder()
+            .build();
         final HttpUrl expected = HttpUrl.get("https://sep.gg");
-        final OAuthAPI oAuthAPI = basicAPI(null, expected);
+        final OAuthAPI oAuthAPI = basicAPI(simpleToken, expected);
         assertEquals(expected, oAuthAPI.getBaseUrl());
     }
 
@@ -79,16 +84,20 @@ public class OAuthAPITest extends APITest {
     }
 
     @Test void getToken_UnparsableResponse_ReturnsEmpty() {
-        final JsonSerializable unparsable = () -> "[123]";
-        final BattleNet battleNet = setupBattleNet(unparsable);
-        final OAuthAPI oAuthAPI = basicAPI(unparsable, battleNet.getRetrofit().baseUrl());
+        final BattleNetEntity mockEntity = Mockito.mock(BattleNetEntity.class);
+        Mockito.when(mockEntity.toJson()).thenReturn("[123]"); // unparsable for the type
+
+        final BattleNet battleNet = setupBattleNet(mockEntity);
+        final OAuthAPI oAuthAPI = basicAPI(mockEntity, battleNet.getRetrofit().baseUrl());
         final Optional<OAuthToken> token = oAuthAPI.getToken();
         assertFalse(token.isPresent());
     }
 
     @Test void getToken_IOError_ReturnsEmpty() {
+        final OAuthToken simpleToken = OAuthToken.builder()
+            .build();
         // invalid URL that won't be able to resolve DNS
-        final OAuthAPI oAuthAPI = basicAPI(null, HttpUrl.get("https://willnotrespond.tld"));
+        final OAuthAPI oAuthAPI = basicAPI(simpleToken, HttpUrl.get("https://willnotrespond.tld"));
         final Optional<OAuthToken> token = oAuthAPI.getToken();
         assertFalse(token.isPresent());
     }

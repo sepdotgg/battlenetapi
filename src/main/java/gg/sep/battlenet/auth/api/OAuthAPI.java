@@ -24,6 +24,7 @@ package gg.sep.battlenet.auth.api;
 
 import java.util.Optional;
 
+import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -38,7 +39,6 @@ import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.api.BattleNetAPI;
 import gg.sep.battlenet.auth.endpoint.OAuthEndpoint;
 import gg.sep.battlenet.auth.model.OAuthToken;
-import gg.sep.battlenet.model.AbstractJsonEntity;
 
 /**
  * This class implements the retrieval of resources at the Battle.net OAuth API endpoint,
@@ -77,15 +77,15 @@ public final class OAuthAPI extends BattleNetAPI {
 
         // the order of these initializing is important
         this.baseUrl = (baseUrl == null) ? HttpUrl.get(BATTLE_NET_OAUTH_BASE_URL) : baseUrl;
-        this.retrofit = initOAuthRetrofit(this.baseUrl);
+        this.retrofit = initOAuthRetrofit(this.baseUrl, battleNet.getJsonParser());
         this.oAuthEndpoint = this.retrofit.create(OAuthEndpoint.class);
 
     }
 
-    private Retrofit initOAuthRetrofit(final HttpUrl oAuthBaseUrl) {
+    private Retrofit initOAuthRetrofit(final HttpUrl oAuthBaseUrl, final Gson jsonParser) {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         return new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(AbstractJsonEntity.defaultGson()))
+            .addConverterFactory(GsonConverterFactory.create(jsonParser))
             .client(httpClientBuilder.build())
             .baseUrl(oAuthBaseUrl)
             .build();

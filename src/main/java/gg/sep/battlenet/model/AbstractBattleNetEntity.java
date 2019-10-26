@@ -32,7 +32,18 @@ import gg.sep.battlenet.BattleNet;
  *
  * Implements the base Getter and Setter for the {@link BattleNet} reference.
  */
-public abstract class AbstractBattleNetEntity extends AbstractJsonEntity implements BattleNetEntity, JsonSerializable {
+public abstract class AbstractBattleNetEntity implements BattleNetEntity, JsonSerializable {
     @Getter @Setter
-    private BattleNet battleNet;
+    private transient BattleNet battleNet;
+
+    /**
+     * Converts the Battle.net entity to a Json string using the Battle.net client's default
+     * JSON parser.
+     *
+     * @return A JSON string serialized from the Battle.net entity.
+     */
+    public String toJson() {
+        return battleNet.getJsonParser()
+            .toJson(this);
+    }
 }

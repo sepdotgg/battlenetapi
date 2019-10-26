@@ -21,6 +21,8 @@
  */
 package gg.sep.battlenet;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Builder;
 import lombok.Getter;
 import okhttp3.HttpUrl;
@@ -31,7 +33,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import gg.sep.battlenet.api.BattleNetAPIProxy;
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.interceptor.OAuthInterceptor;
-import gg.sep.battlenet.model.AbstractJsonEntity;
 
 /**
  * Provides access to the Battle.net APIs.
@@ -49,6 +50,8 @@ public final class BattleNet {
     private final BattleNetAPIProxy proxy;
     @Getter
     private final Retrofit retrofit;
+    @Getter
+    private final Gson jsonParser;
 
     /**
      * Create a new instance of the Battle.net API client using the specified application Client ID and secret.
@@ -60,12 +63,19 @@ public final class BattleNet {
     @Builder
     private BattleNet(final String clientId, final String clientSecret, final HttpUrl baseUrl) {
         this.proxy = new BattleNetAPIProxy(this);
+        this.jsonParser = buildGsonParser();
+
         final OAuthAPI oAuthAPI = OAuthAPI.builder()
             .clientId(clientId)
             .clientSecret(clientSecret)
             .battleNet(this)
             .build();
         this.retrofit = (baseUrl == null) ? initRetrofit(oAuthAPI) : initRetrofit(baseUrl, oAuthAPI);
+    }
+
+    private Gson buildGsonParser() {
+        return new GsonBuilder()
+            .create();
     }
 
     /**
@@ -76,7 +86,7 @@ public final class BattleNet {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
         httpClientBuilder.addInterceptor(new OAuthInterceptor(oAuthAPI));
         return new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(AbstractJsonEntity.defaultGson()))
+            .addConverterFactory(GsonConverterFactory.create(jsonParser))
             .client(httpClientBuilder.build())
             .baseUrl(baseUrl)
             .build();

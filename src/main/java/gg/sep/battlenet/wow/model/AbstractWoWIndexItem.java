@@ -32,7 +32,6 @@ import lombok.Setter;
 import retrofit2.Call;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
-import gg.sep.battlenet.model.AbstractJsonEntity;
 import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 import gg.sep.battlenet.wow.endpoint.KeyFullItemEndpoint;
@@ -68,7 +67,7 @@ public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends Ab
         final Call<JsonElement> call = endpoint.getFullItem(fullUrl.toExternalForm());
         try {
             final JsonElement jsonElement = call.execute().body();
-            final T entity = AbstractJsonEntity.defaultGson().fromJson(jsonElement, clazz);
+            final T entity = getBattleNet().getJsonParser().fromJson(jsonElement, clazz);
             final Optional<T> fullItem = Optional.ofNullable(entity);
             fullItem.ifPresent(i -> i.setBattleNet(getBattleNet()));
             return fullItem;

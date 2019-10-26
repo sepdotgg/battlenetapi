@@ -28,7 +28,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
-import gg.sep.battlenet.model.AbstractJsonEntity;
+import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 
 /**
@@ -38,6 +38,6 @@ import gg.sep.battlenet.model.JsonSerializable;
  */
 @Getter
 @Setter(AccessLevel.PRIVATE)
-public class WoWKey extends AbstractJsonEntity implements JsonSerializable {
+public class WoWKey extends AbstractBattleNetEntity implements JsonSerializable {
     private URL href;
 }
