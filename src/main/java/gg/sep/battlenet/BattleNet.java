@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NonNull;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -33,7 +34,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import gg.sep.battlenet.adapter.BattleNetEntityPostProcessor;
 import gg.sep.battlenet.api.BattleNetAPIProxy;
 import gg.sep.battlenet.auth.api.OAuthAPI;
-import gg.sep.battlenet.interceptor.OAuthInterceptor;
+import gg.sep.battlenet.interceptor.BattleNetInterceptor;
+import gg.sep.battlenet.model.BattleNetLocale;
+import gg.sep.battlenet.model.BattleNetRegion;
 
 /**
  * Provides access to the Battle.net APIs.
@@ -45,8 +48,14 @@ import gg.sep.battlenet.interceptor.OAuthInterceptor;
  */
 
 public final class BattleNet {
-    private static final String BATTLENET_API_BASE_URL = "https://us.api.blizzard.com/"; // TODO: Support regions
+    private static final String BATTLENET_API_BASE_URL_F = "https://%s.api.blizzard.com/";
 
+    @Getter
+    private BattleNetRegion region;
+    @Getter
+    private BattleNetLocale locale;
+    @Getter
+    private final HttpUrl baseUrl;
     @Getter
     private final BattleNetAPIProxy proxy;
     @Getter
@@ -62,7 +71,32 @@ public final class BattleNet {
      *                good reason to explicitly override it.
      */
     @Builder
-    private BattleNet(final String clientId, final String clientSecret, final HttpUrl baseUrl) {
+    private BattleNet(@NonNull final String clientId, @NonNull final String clientSecret, final HttpUrl baseUrl,
+                      final BattleNetRegion region, final BattleNetLocale locale) {
+
+        if (region == null && locale != null) {
+            this.locale = locale;
+            this.region = locale.getRegion();
+        } else {
+            this.region = (region == null) ? BattleNetRegion.NORTH_AMERICA : region;
+            this.locale = (locale == null) ? this.region.getSupportedLocales().get(0) : locale;
+        }
+
+        // check that the locale provided is valid for the region
+        if (!this.region.hasLocale(this.locale)) {
+            throw new IllegalArgumentException(String.format(
+                "Locale '%s' is not supported in region '%s'. Valid locales: %s",
+                this.locale, this.region, this.region.getSupportedLocales()
+            ));
+        }
+
+        if (baseUrl == null) {
+            final String formattedUrl = String.format(BATTLENET_API_BASE_URL_F, this.region.getRegionUrlValue());
+            this.baseUrl = HttpUrl.get(formattedUrl);
+        } else {
+            this.baseUrl = baseUrl;
+        }
+
         this.proxy = new BattleNetAPIProxy(this);
         this.jsonParser = buildJsonParser();
 
@@ -71,8 +105,10 @@ public final class BattleNet {
             .clientSecret(clientSecret)
             .battleNet(this)
             .build();
-        this.retrofit = (baseUrl == null) ? initRetrofit(oAuthAPI) : initRetrofit(baseUrl, oAuthAPI);
+        this.retrofit = initRetrofit(this.baseUrl, oAuthAPI);
     }
+
+
 
     /**
      * Creates a new instance of the Gson JSON parser that will be used by the Battle.net client.
@@ -92,17 +128,13 @@ public final class BattleNet {
      * Build an instance of the default {@link Retrofit} API library for the Battle.net API.
      * @return Completed instance of the Retrofit API library.
      */
-    private Retrofit initRetrofit(final HttpUrl baseUrl, final OAuthAPI oAuthAPI) {
+    private Retrofit initRetrofit(final HttpUrl apiBaseUrl, final OAuthAPI oAuthAPI) {
         final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-        httpClientBuilder.addInterceptor(new OAuthInterceptor(oAuthAPI));
+        httpClientBuilder.addInterceptor(new BattleNetInterceptor(oAuthAPI, this));
         return new Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(jsonParser))
             .client(httpClientBuilder.build())
-            .baseUrl(baseUrl)
+            .baseUrl(apiBaseUrl)
             .build();
-    }
-
-    private Retrofit initRetrofit(final OAuthAPI oAuthAPI) {
-        return initRetrofit(HttpUrl.get(BATTLENET_API_BASE_URL), oAuthAPI);
     }
 }

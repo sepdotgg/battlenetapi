@@ -49,7 +49,7 @@ import gg.sep.result.Result;
  */
 @Log4j2
 public final class OAuthAPI extends BattleNetAPI {
-    private static final String BATTLE_NET_OAUTH_BASE_URL = "https://us.battle.net/"; // TODO: Support multiple regions
+    private static final String BATTLE_NET_OAUTH_BASE_URL_F = "https://%s.battle.net/";
     private static final String TOKEN_POST_PATH = "oauth/token?grant_type=client_credentials";
 
     private final transient String basicAuthCredentials;
@@ -75,7 +75,8 @@ public final class OAuthAPI extends BattleNetAPI {
         this.basicAuthCredentials = Credentials.basic(clientId, clientSecret);
 
         // the order of these initializing is important
-        this.baseUrl = (baseUrl == null) ? HttpUrl.get(BATTLE_NET_OAUTH_BASE_URL) : baseUrl;
+        this.baseUrl = (baseUrl == null) ?
+            HttpUrl.get(String.format(BATTLE_NET_OAUTH_BASE_URL_F, battleNet.getRegion().getRegionUrlValue())) : baseUrl;
         this.retrofit = initOAuthRetrofit(this.baseUrl, battleNet.getJsonParser());
         this.oAuthEndpoint = this.retrofit.create(OAuthEndpoint.class);
 

@@ -22,8 +22,6 @@
 
 package gg.sep.battlenet.wow.model;
 
-import java.util.List;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -40,6 +38,4 @@ import gg.sep.battlenet.model.JsonSerializable;
 @Setter(AccessLevel.PRIVATE)
 public abstract class AbstractWoWIndex<T extends AbstractWoWIndexItem> extends AbstractBattleNetEntity implements
     WoWIndex<T>, JsonSerializable {
-
-    private List<T> items;
 }
