@@ -22,24 +22,22 @@
 
 package gg.sep.battlenet.wow.model;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
-import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.result.Result;
 
 /**
- * Abstract implementation of {@link WoWIndexItem}, which implements the core getters for index items.
- *
- * @param <T> The type of the full item that will be returned by a call to {@link Keyed#getFullItem()}.
+ * Media link present on {@link HasMedia} entities, that contains a link to a {@link Keyed} full document,
+ * and can be retrieved via a call to {@link Keyed#getFullItem()}.
  */
 @Getter
-@Setter(AccessLevel.PRIVATE)
-@Log4j2
-public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends AbstractKeyedEntity<T>
-    implements WoWIndexItem<T>, JsonSerializable {
+public class WoWMediaLink extends AbstractKeyedEntity<WoWMedia> implements JsonSerializable {
 
-    private String name;
+    /**
+     * {@inheritDoc}
+     */
+    public Result<WoWMedia, String> getFullItem() {
+        return getFullItem(WoWMedia.class);
+    }
 }

@@ -22,24 +22,15 @@
 
 package gg.sep.battlenet.wow.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
-
-import gg.sep.battlenet.model.BattleNetEntity;
-import gg.sep.battlenet.model.JsonSerializable;
-
 /**
- * Abstract implementation of {@link WoWIndexItem}, which implements the core getters for index items.
+ * Interface to indicate that a WoW API entity has a link to one of the WoW Media endpoints.
  *
- * @param <T> The type of the full item that will be returned by a call to {@link Keyed#getFullItem()}.
+ * API Reference: https://develop.battle.net/documentation/guides/game-data-apis-wow-media-documents
  */
-@Getter
-@Setter(AccessLevel.PRIVATE)
-@Log4j2
-public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends AbstractKeyedEntity<T>
-    implements WoWIndexItem<T>, JsonSerializable {
-
-    private String name;
+public interface HasMedia {
+    /**
+     * Returns a {@link Keyed} media link, which can be used to access the full {@link WoWMedia} item.
+     * @return A {@link Keyed} media link, which can be used to access the full {@link WoWMedia} item.
+     */
+    WoWMediaLink getMediaLink();
 }
