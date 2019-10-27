@@ -30,6 +30,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import gg.sep.battlenet.adapter.BattleNetEntityPostProcessor;
 import gg.sep.battlenet.api.BattleNetAPIProxy;
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.interceptor.OAuthInterceptor;
@@ -63,7 +64,7 @@ public final class BattleNet {
     @Builder
     private BattleNet(final String clientId, final String clientSecret, final HttpUrl baseUrl) {
         this.proxy = new BattleNetAPIProxy(this);
-        this.jsonParser = buildGsonParser();
+        this.jsonParser = buildJsonParser();
 
         final OAuthAPI oAuthAPI = OAuthAPI.builder()
             .clientId(clientId)
@@ -73,8 +74,17 @@ public final class BattleNet {
         this.retrofit = (baseUrl == null) ? initRetrofit(oAuthAPI) : initRetrofit(baseUrl, oAuthAPI);
     }
 
-    private Gson buildGsonParser() {
+    /**
+     * Creates a new instance of the Gson JSON parser that will be used by the Battle.net client.
+     *
+     * <p>This should register whatever custom type adapters and factories that are needed to construct, serialize,
+     * and deserialize API responses.
+     *
+     * @return New instance of Gson which can be used to serialize/deserialize Battle.net JSON and objects.
+     */
+    private Gson buildJsonParser() {
         return new GsonBuilder()
+            .registerTypeAdapterFactory(new BattleNetEntityPostProcessor(this))
             .create();
     }
 

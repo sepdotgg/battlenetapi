@@ -51,8 +51,8 @@ public abstract class WoWAPI extends BattleNetAPI {
     /**
      * A modified version of {@link #executeCall(Call)} that's designed for {@link WoWIndex} API endpoints.
      *
-     * It is a wrapper around {@link #executeCall(Call)} which assigns the instance of {@link BattleNet} to each
-     * of the child items contained in the {@link WoWIndex#getItems()} field.
+     * It is a wrapper around {@link #executeCall(Call)} which returns the child items contained in
+     * the {@link WoWIndex#getItems()} field.
      *
      * @param call Retrofit call which will return a {@code I} {@link WoWIndex} API response.
      * @param <I> Type of index API response to expect from the raw API call.
@@ -68,9 +68,6 @@ public abstract class WoWAPI extends BattleNetAPI {
         if (!indexResponse.isPresent()) {
             return Collections.emptyList();
         }
-        final List<E> items = indexResponse.get().getItems();
-        final BattleNet thisBattleNet = getBattleNet();
-        items.forEach(i -> i.setBattleNet(thisBattleNet));
-        return items;
+        return indexResponse.get().getItems();
     }
 }

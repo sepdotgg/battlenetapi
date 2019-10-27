@@ -90,7 +90,6 @@ public class BattleNetAPIProxyTest {
         final Optional<BattleNetEntity> responseObject = proxy.getResponse(mockCall);
         Assertions.assertTrue(responseObject.isPresent());
         Assertions.assertEquals(mockObject, responseObject.get());
-        Mockito.verify(mockObject, Mockito.times(1)).setBattleNet(Mockito.eq(mockBattleNet));
         Mockito.verify(mockCall, Mockito.times(2)).execute();
     }
 
@@ -106,6 +105,5 @@ public class BattleNetAPIProxyTest {
 
         Assertions.assertTrue(responseObject.isPresent());
         Assertions.assertEquals(mockObject, responseObject.get());
-        Mockito.verify(mockObject, Mockito.times(1)).setBattleNet(Mockito.eq(mockBattleNet));
     }
 }

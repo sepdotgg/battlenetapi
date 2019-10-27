@@ -112,8 +112,6 @@ public final class BattleNetAPIProxy {
             Waits.simpleSleep(RETRY_INTERVAL_MS);
             return getResponse(call.clone(), currAttempt);
         }
-        final Optional<T> battleNetObject = Optional.ofNullable(apiResponse.body());
-        battleNetObject.ifPresent(bno -> bno.setBattleNet(this.battleNet)); // set the instance of Battle.net
-        return battleNetObject;
+        return Optional.ofNullable(apiResponse.body());
     }
 }

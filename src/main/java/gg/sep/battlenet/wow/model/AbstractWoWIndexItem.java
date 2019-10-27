@@ -68,9 +68,7 @@ public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends Ab
         try {
             final JsonElement jsonElement = call.execute().body();
             final T entity = getBattleNet().getJsonParser().fromJson(jsonElement, clazz);
-            final Optional<T> fullItem = Optional.ofNullable(entity);
-            fullItem.ifPresent(i -> i.setBattleNet(getBattleNet()));
-            return fullItem;
+            return Optional.ofNullable(entity);
         } catch (final Exception e) {
             return Optional.empty();
         }

@@ -24,6 +24,8 @@ package gg.sep.battlenet.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Optional;
 
@@ -43,10 +45,14 @@ import gg.sep.battlenet.model.BattleNetEntity;
 public class OAuthAPITest extends APITest {
 
     private OAuthAPI basicAPI(final BattleNetEntity entity, final HttpUrl baseUrl) {
+        return basicAPI(baseUrl, setupBattleNet(entity));
+    }
+
+    private OAuthAPI basicAPI(final HttpUrl baseUrl, final BattleNet battleNet) {
         final OAuthAPI.OAuthAPIBuilder builder = OAuthAPI.builder()
             .clientId("")
             .clientSecret("")
-            .battleNet(setupBattleNet(entity));
+            .battleNet(battleNet);
         if (baseUrl != null) {
             builder.baseUrl(baseUrl);
         }
@@ -58,7 +64,6 @@ public class OAuthAPITest extends APITest {
             .build();
         final OAuthAPI oAuthAPI = basicAPI(simpleToken, null);
         assertEquals(HttpUrl.get("https://us.battle.net"), oAuthAPI.getBaseUrl());
-
     }
 
     @Test void builder_BaseUrlSet_UsesSetBaseUrl() {
@@ -100,5 +105,20 @@ public class OAuthAPITest extends APITest {
         final OAuthAPI oAuthAPI = basicAPI(simpleToken, HttpUrl.get("https://willnotrespond.tld"));
         final Optional<OAuthToken> token = oAuthAPI.getToken();
         assertFalse(token.isPresent());
+    }
+
+    @Test void battleNet_UsesPostProcessor_SetsBattleNetOnEntity() {
+        final OAuthToken expectedToken = OAuthToken.builder()
+            .accessToken("foo")
+            .expiresIn(123L)
+            .tokenType("access_token")
+            .build();
+
+        final BattleNet battleNet = setupBattleNet(expectedToken);
+        final OAuthAPI oAuthAPI = basicAPI(battleNet.getRetrofit().baseUrl(), battleNet);
+
+        final Optional<OAuthToken> token = oAuthAPI.getToken();
+        assertTrue(token.isPresent());
+        assertSame(battleNet, token.get().getBattleNet());
     }
 }
