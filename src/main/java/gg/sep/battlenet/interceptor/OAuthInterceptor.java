@@ -23,7 +23,6 @@
 package gg.sep.battlenet.interceptor;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -32,6 +31,7 @@ import okhttp3.Response;
 
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.auth.model.OAuthToken;
+import gg.sep.result.Result;
 
 /**
  * HTTP Request interceptor that handles adding the client's OAuth Access token to each
@@ -63,8 +63,8 @@ public final class OAuthInterceptor implements Interceptor {
     }
 
     private OAuthToken refreshToken() {
-        final Optional<OAuthToken> tokenRequest = oAuthAPI.getToken();
-        this.oAuthToken = tokenRequest.orElseThrow(RuntimeException::new);
+        final Result<OAuthToken, String> tokenRequest = oAuthAPI.getToken();
+        this.oAuthToken = tokenRequest.getOk().orElseThrow(RuntimeException::new);
         return this.oAuthToken;
     }
 

@@ -22,9 +22,7 @@
 
 package gg.sep.battlenet.wow.api;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import retrofit2.Call;
 
@@ -33,6 +31,7 @@ import gg.sep.battlenet.api.BattleNetAPI;
 import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.wow.model.WoWIndex;
 import gg.sep.battlenet.wow.model.WoWIndexItem;
+import gg.sep.result.Result;
 
 /**
  * A subclass of {@link BattleNetAPI} which implements WoW-API specific
@@ -61,13 +60,10 @@ public abstract class WoWAPI extends BattleNetAPI {
      * @return List of {@link WoWIndexItem}s contained in the index if the API call was successful,
      *         otherwise an empty list.
      */
-    protected <I extends WoWIndex<E>, E extends WoWIndexItem<T>, T extends BattleNetEntity> List<E> executeIndexCall(
-        final Call<I> call) {
+    protected <I extends WoWIndex<E>, E extends WoWIndexItem<T>, T extends BattleNetEntity>
+        Result<List<E>, String> executeIndexCall(final Call<I> call) {
 
-        final Optional<I> indexResponse = executeCall(call);
-        if (!indexResponse.isPresent()) {
-            return Collections.emptyList();
-        }
-        return indexResponse.get().getItems();
+        final Result<I, String> indexResponse = executeCall(call);
+        return indexResponse.map(WoWIndex::getItems);
     }
 }

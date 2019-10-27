@@ -29,7 +29,7 @@ import gg.sep.battlenet.BattleNet;
  *
  * <p>Used so we can infer the type of our API models and assign a reference to the Battle.net client instance.
  * This is useful for writing {@code BattleNetObject} subclass which themselves can call back into the API, eg,
- * retrieving one of the keyed full objects. // TODO link to keyed
+ * retrieving one of the keyed full objects.
  */
 public interface BattleNetEntity extends JsonSerializable {
     /**

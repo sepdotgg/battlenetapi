@@ -22,8 +22,6 @@
 
 package gg.sep.battlenet.auth.api;
 
-import java.util.Optional;
-
 import com.google.gson.Gson;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,6 +37,7 @@ import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.api.BattleNetAPI;
 import gg.sep.battlenet.auth.endpoint.OAuthEndpoint;
 import gg.sep.battlenet.auth.model.OAuthToken;
+import gg.sep.result.Result;
 
 /**
  * This class implements the retrieval of resources at the Battle.net OAuth API endpoint,
@@ -94,9 +93,10 @@ public final class OAuthAPI extends BattleNetAPI {
     /**
      * Retrieve the client credentials grant response from the OAuthToken API.
      * Action: POST /oauth/token
-     * @return Optional of the OAuthToken response, if the call was successful, otherwise empty.
+     * @return An {@link gg.sep.result.Ok} result containing the OAuthToken if the API call
+     *         was successful, otherwise an {@link gg.sep.result.Err} containing the error message.
      */
-    public Optional<OAuthToken> getToken() {
+    public Result<OAuthToken, String> getToken() {
         final Call<OAuthToken> call = oAuthEndpoint.getAccessToken(baseUrl + TOKEN_POST_PATH, basicAuthCredentials);
         return executeCall(call);
     }

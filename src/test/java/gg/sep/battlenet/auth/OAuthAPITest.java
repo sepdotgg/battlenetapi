@@ -23,11 +23,8 @@
 package gg.sep.battlenet.auth;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Optional;
 
 import okhttp3.HttpUrl;
 import org.junit.jupiter.api.Test;
@@ -38,6 +35,8 @@ import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.auth.model.OAuthToken;
 import gg.sep.battlenet.model.BattleNetEntity;
+import gg.sep.result.Ok;
+import gg.sep.result.Result;
 
 /**
  * Unit test for {@link gg.sep.battlenet.auth.api.OAuthAPI}.
@@ -84,27 +83,27 @@ public class OAuthAPITest extends APITest {
         final BattleNet battleNet = setupBattleNet(expectedToken);
         final OAuthAPI oAuthAPI = basicAPI(expectedToken, battleNet.getRetrofit().baseUrl());
 
-        final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertEquals(Optional.of(expectedToken), token);
+        final Result<OAuthToken, String> token = oAuthAPI.getToken();
+        assertEquals(Ok.of(expectedToken), token);
     }
 
-    @Test void getToken_UnparsableResponse_ReturnsEmpty() {
+    @Test void getToken_UnparsableResponse_ReturnsErr() {
         final BattleNetEntity mockEntity = Mockito.mock(BattleNetEntity.class);
         Mockito.when(mockEntity.toJson()).thenReturn("[123]"); // unparsable for the type
 
         final BattleNet battleNet = setupBattleNet(mockEntity);
         final OAuthAPI oAuthAPI = basicAPI(mockEntity, battleNet.getRetrofit().baseUrl());
-        final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertFalse(token.isPresent());
+        final Result<OAuthToken, String> token = oAuthAPI.getToken();
+        assertTrue(token.isErr());
     }
 
-    @Test void getToken_IOError_ReturnsEmpty() {
+    @Test void getToken_IOError_ReturnsErr() {
         final OAuthToken simpleToken = OAuthToken.builder()
             .build();
         // invalid URL that won't be able to resolve DNS
         final OAuthAPI oAuthAPI = basicAPI(simpleToken, HttpUrl.get("https://willnotrespond.tld"));
-        final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertFalse(token.isPresent());
+        final Result<OAuthToken, String> token = oAuthAPI.getToken();
+        assertTrue(token.isErr());
     }
 
     @Test void battleNet_UsesPostProcessor_SetsBattleNetOnEntity() {
@@ -117,8 +116,8 @@ public class OAuthAPITest extends APITest {
         final BattleNet battleNet = setupBattleNet(expectedToken);
         final OAuthAPI oAuthAPI = basicAPI(battleNet.getRetrofit().baseUrl(), battleNet);
 
-        final Optional<OAuthToken> token = oAuthAPI.getToken();
-        assertTrue(token.isPresent());
-        assertSame(battleNet, token.get().getBattleNet());
+        final Result<OAuthToken, String> token = oAuthAPI.getToken();
+        assertTrue(token.isOk());
+        assertSame(battleNet, token.unwrap().getBattleNet());
     }
 }

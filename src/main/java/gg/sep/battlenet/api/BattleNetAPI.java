@@ -22,10 +22,6 @@
 
 package gg.sep.battlenet.api;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import com.google.gson.JsonParseException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +30,7 @@ import retrofit2.Call;
 
 import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.model.BattleNetEntity;
+import gg.sep.result.Result;
 
 /**
  * Abstract class which is the basis for each of the individual Battle.net API classes.
@@ -51,18 +48,15 @@ public abstract class BattleNetAPI {
      * Executes the API call and converts the response body into the {@link BattleNetEntity}.
      *
      * If there was an error or parsing was unsuccessful, the error will be logged and this method
-     * will return an empty {@link Optional}, otherwise will return an {@link Optional} of the API object.
+     * will return an {@link gg.sep.result.Err} type {@link Result} containing the error message,
+     * otherwise will return an {@link gg.sep.result.Ok} type {@link Result} containing the API object.
      *
      * @param call Retrofit API call to execute.
      * @param <T> Type of the API response object that is expected to be returned from the API call.
-     * @return Optional of type {@code T}, which represents the API response object.
+     * @return An {@link gg.sep.result.Ok} result containing the entity {@code T} if the API call
+     *         was successful, otherwise an {@link gg.sep.result.Err} containing the error message.
      */
-    protected <T extends BattleNetEntity> Optional<T> executeCall(final Call<T> call) {
-        try {
-            return battleNet.getProxy().getResponse(call);
-        } catch (final IOException | JsonParseException e) {
-            log.error(e);
-            return Optional.empty();
-        }
+    protected <T extends BattleNetEntity> Result<T, String> executeCall(final Call<T> call) {
+        return battleNet.getProxy().getResponse(call);
     }
 }

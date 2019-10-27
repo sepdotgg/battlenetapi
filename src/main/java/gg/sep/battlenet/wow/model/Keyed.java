@@ -22,10 +22,9 @@
 
 package gg.sep.battlenet.wow.model;
 
-import java.util.Optional;
-
 import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.result.Result;
 
 /**
  * An entity from the Battle.net WoW API that contains a {@code key} field. This typically occurs on
@@ -46,8 +45,9 @@ public interface Keyed<T extends BattleNetEntity> extends JsonSerializable {
      * Using the {@link #getKey()} href field, attempts to retrieve the full version of the API entity {@code T}
      * via a call to the Battle.net API.
      *
-     * @return An optional of the full item {@code T} located at the {@link #getKey()}} permalink if the API call
-     *         was successful, otherwise an empty optional.
+     * @return An {@link gg.sep.result.Ok} result of the full item {@code T} located at the {@link #getKey()}}
+     *         permalink if the API call was successful, otherwise an {@link gg.sep.result.Err} containing
+     *         the error message.
      */
-    Optional<T> getFullItem();
+    Result<T, String> getFullItem();
 }

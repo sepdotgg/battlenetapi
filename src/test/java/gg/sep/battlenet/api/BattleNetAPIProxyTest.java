@@ -22,9 +22,6 @@
 
 package gg.sep.battlenet.api;
 
-import java.io.IOException;
-import java.util.Optional;
-
 import okhttp3.HttpUrl;
 import okhttp3.Request;
 import org.junit.jupiter.api.Assertions;
@@ -36,6 +33,7 @@ import retrofit2.Response;
 
 import gg.sep.battlenet.BattleNet;
 import gg.sep.battlenet.model.BattleNetEntity;
+import gg.sep.result.Result;
 
 /**
  * Tests for {@link BattleNetAPIProxy}.
@@ -48,6 +46,7 @@ public class BattleNetAPIProxyTest {
                                        final int responseCode, final boolean succeedAfter) throws Exception {
         final Request mockRequest = Mockito.mock(Request.class);
         final Response<BattleNetEntity> mockResponse = Mockito.mock(Response.class);
+        final okhttp3.Response mockRawResponse = Mockito.mock(okhttp3.Response.class);
         final HttpUrl httpUrl = HttpUrl.get("https://sep.gg");
 
         Mockito.when(mockCall.clone()).thenReturn(mockCall);
@@ -59,7 +58,8 @@ public class BattleNetAPIProxyTest {
             responseCodeStub.thenReturn(200);
         }
         Mockito.when(mockResponse.body()).thenReturn(mockObject);
-
+        Mockito.when(mockResponse.raw()).thenReturn(mockRawResponse);
+        Mockito.when(mockRawResponse.request()).thenReturn(mockRequest);
 
         final BattleNetAPIProxy proxy = new BattleNetAPIProxy(mockBattleNet);
         if (maxThrottleRetries > 0) {
@@ -69,14 +69,14 @@ public class BattleNetAPIProxyTest {
     }
 
     @Test
-    void getResponse_HitMaxRetries_ThrowsException() throws Exception {
+    void getResponse_HitMaxRetries_IsErr() throws Exception {
         final Call<BattleNetEntity> mockCall = Mockito.mock(Call.class);
         final BattleNet mockBattleNet = Mockito.mock(BattleNet.class);
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, null, 2,
             429, false);
         proxy.setMaxThrottleRetries(2);
-        final IOException exception = Assertions.assertThrows(IOException.class, () -> proxy.getResponse(mockCall));
-        Assertions.assertEquals("Maximum number of throttle retries hit", exception.getMessage());
+        final Result<?, String> response = proxy.getResponse(mockCall);
+        Assertions.assertEquals("Maximum number of throttle retries hit", response.unwrapErr());
     }
 
     @Test
@@ -87,9 +87,9 @@ public class BattleNetAPIProxyTest {
 
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, mockObject, 4, 429,
             true);
-        final Optional<BattleNetEntity> responseObject = proxy.getResponse(mockCall);
-        Assertions.assertTrue(responseObject.isPresent());
-        Assertions.assertEquals(mockObject, responseObject.get());
+        final Result<BattleNetEntity, String> responseObject = proxy.getResponse(mockCall);
+        Assertions.assertTrue(responseObject.isOk());
+        Assertions.assertEquals(mockObject, responseObject.unwrap());
         Mockito.verify(mockCall, Mockito.times(2)).execute();
     }
 
@@ -101,9 +101,21 @@ public class BattleNetAPIProxyTest {
 
         final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, mockObject, 1, 200,
             false);
-        final Optional<BattleNetEntity> responseObject = proxy.getResponse(mockCall);
+        final Result<BattleNetEntity, String> responseObject = proxy.getResponse(mockCall);
 
-        Assertions.assertTrue(responseObject.isPresent());
-        Assertions.assertEquals(mockObject, responseObject.get());
+        Assertions.assertTrue(responseObject.isOk());
+        Assertions.assertEquals(mockObject, responseObject.unwrap());
+    }
+
+    @Test void getResponse_NullBody_ReturnsErr() throws Exception {
+        final Call<BattleNetEntity> mockCall = Mockito.mock(Call.class);
+        final BattleNet mockBattleNet = Mockito.mock(BattleNet.class);
+
+        final BattleNetAPIProxy proxy = getProxy(mockBattleNet, mockCall, null, 1, 200,
+            false);
+        final Result<BattleNetEntity, String> responseObject = proxy.getResponse(mockCall);
+
+        Assertions.assertTrue(responseObject.isErr());
+        Assertions.assertTrue(responseObject.unwrapErr().startsWith("Unable to get an API response from Battle.net:"));
     }
 }

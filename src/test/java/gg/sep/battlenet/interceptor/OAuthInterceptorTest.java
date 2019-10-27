@@ -25,7 +25,6 @@ package gg.sep.battlenet.interceptor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor.Chain;
@@ -36,6 +35,7 @@ import org.mockito.Mockito;
 
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.auth.model.OAuthToken;
+import gg.sep.result.Ok;
 
 /**
  * Unit tests for {@link OAuthInterceptor}.
@@ -66,7 +66,7 @@ public class OAuthInterceptorTest {
             .build();
         final Request.Builder newRequestBuilder = new Request.Builder();
 
-        Mockito.when(mockOAuthAPI.getToken()).thenReturn(Optional.of(expectedToken));
+        Mockito.when(mockOAuthAPI.getToken()).thenReturn(Ok.of(expectedToken));
         final Chain mockChain = basicChain(false, newRequestBuilder);
         interceptor.intercept(mockChain);
 
@@ -87,8 +87,8 @@ public class OAuthInterceptorTest {
             .build();
         final Request.Builder newRequestBuilder = new Request.Builder();
 
-        Mockito.when(mockOAuthAPI.getToken()).thenReturn(Optional.of(expectedToken))
-            .thenReturn(Optional.of(secondRequestToken));
+        Mockito.when(mockOAuthAPI.getToken()).thenReturn(Ok.of(expectedToken))
+            .thenReturn(Ok.of(secondRequestToken));
         final Chain mockChain = basicChain(false, newRequestBuilder);
         interceptor.intercept(mockChain);
         interceptor.intercept(mockChain);

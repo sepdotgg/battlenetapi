@@ -23,18 +23,21 @@
 package gg.sep.battlenet.wow.model;
 
 import java.net.URL;
-import java.util.Optional;
 
 import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import retrofit2.Call;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 import gg.sep.battlenet.wow.endpoint.KeyFullItemEndpoint;
+import gg.sep.result.Err;
+import gg.sep.result.Ok;
+import gg.sep.result.Result;
 
 /**
  * Abstract implementation of {@link WoWIndexItem}, which implements a base helper method that
@@ -44,6 +47,7 @@ import gg.sep.battlenet.wow.endpoint.KeyFullItemEndpoint;
  */
 @Getter
 @Setter(AccessLevel.PRIVATE)
+@Log4j2
 public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends AbstractBattleNetEntity
     implements WoWIndexItem<T>, JsonSerializable {
 
@@ -58,9 +62,10 @@ public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends Ab
      * and converts it to the model specified by {@code T}.
      *
      * @param clazz Class of {@code T} which will be used to parse the API response.
-     * @return Optional of {@code T} if the API call was successful, otherwise an empty Optional.
+     * @return {@link Ok} result containing of {@code T} if the API call was successful, otherwise an {@link Err}
+     *         containing the error message.
      */
-    protected Optional<T> getFullItem(final Class<T> clazz) {
+    protected Result<T, String> getFullItem(final Class<T> clazz) {
         final URL fullUrl = key.getHref();
         final KeyFullItemEndpoint endpoint = getBattleNet().getRetrofit().create(KeyFullItemEndpoint.class);
 
@@ -68,9 +73,15 @@ public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends Ab
         try {
             final JsonElement jsonElement = call.execute().body();
             final T entity = getBattleNet().getJsonParser().fromJson(jsonElement, clazz);
-            return Optional.ofNullable(entity);
+            return nullableResult(entity, "Error retrieving the full item %s", call.request().url());
         } catch (final Exception e) {
-            return Optional.empty();
+            log.error(e);
+            return nullableResult(null, "Exception when attempting to get Full Item. url=%s, exception=%s",
+                call.request().url(), e);
         }
+    }
+
+    private Result<T, String> nullableResult(final T ok, final String err, final Object... args) {
+        return (ok == null) ? Err.of(String.format(err, args)) : Ok.of(ok);
     }
 }
