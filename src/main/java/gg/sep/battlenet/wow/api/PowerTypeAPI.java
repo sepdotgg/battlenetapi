@@ -64,7 +64,7 @@ public class PowerTypeAPI extends WoWAPI {
     }
 
     /**
-     * Gets a WoW Power TYpe entity for the specified Power Type {@code id}.
+     * Gets a WoW Power Type entity for the specified Power Type {@code id}.
      * @param id ID of the WoW Power Type.
      * @return {@link Ok} containing the Power Type if the API call was successful,
      *         otherwise an {@link Err} containing the error message.
