@@ -37,6 +37,8 @@ import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.interceptor.BattleNetInterceptor;
 import gg.sep.battlenet.model.BattleNetLocale;
 import gg.sep.battlenet.model.BattleNetRegion;
+import gg.sep.battlenet.wow.model.talent.TalentTier;
+import gg.sep.battlenet.wow.serializer.TalentTierDeserializer;
 
 /**
  * Provides access to the Battle.net APIs.
@@ -121,6 +123,7 @@ public final class BattleNet {
     private Gson buildJsonParser() {
         return new GsonBuilder()
             .registerTypeAdapterFactory(new BattleNetEntityPostProcessor(this))
+            .registerTypeAdapter(TalentTier.class, new TalentTierDeserializer(this))
             .create();
     }
 

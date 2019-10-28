@@ -22,36 +22,20 @@
 
 package gg.sep.battlenet.wow.model.talent;
 
+import java.util.List;
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
+import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.AbstractWoWIndexItem;
-import gg.sep.result.Err;
-import gg.sep.result.Result;
 
 /**
- * Represents the minimal index variation of WoW Talent API entity, which is contained in
- * {@link TalentIndex}.
- *
- * <p><strong>IMPORTANT:</strong> The WoW Talent's API is not currently implemented by Blizzard,
- * and calls to the API will not resolve. {@link #getFullItem()} will always return an error. See the known issues:
- * https://develop.battle.net/documentation/guides/game-data-apis-wow-known-issues
- *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * Represents a a Talent Tier present in some Specialization/Talent APIs.
  */
+@Builder
 @Getter
-public class TalentIndexItem extends AbstractWoWIndexItem<Talent> implements JsonSerializable {
-
-    @Setter
-    private TalentSpellTooltip spellTooltip;
-
-    /**
-     * {@inheritDoc}
-     */
-    public Result<Talent, String> getFullItem() {
-        return Err.of("The WoW Talents API is not currently implemented by Blizzard. See the Known Issues: " +
-            "https://develop.battle.net/documentation/guides/game-data-apis-wow-known-issues");
-    }
+public class TalentTier extends AbstractBattleNetEntity implements JsonSerializable {
+    private Long level;
+    private List<TalentIndexItem> talents;
 }
