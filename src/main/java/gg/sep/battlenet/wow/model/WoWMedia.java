@@ -22,6 +22,10 @@
 
 package gg.sep.battlenet.wow.model;
 
+import java.util.List;
+
+import lombok.Getter;
+
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 
@@ -30,5 +34,7 @@ import gg.sep.battlenet.model.JsonSerializable;
  *
  * API Reference: https://develop.battle.net/documentation/guides/game-data-apis-wow-media-documents
  */
+@Getter
 public class WoWMedia extends AbstractBattleNetEntity implements JsonSerializable {
+    private List<WoWMediaAsset> assets;
 }

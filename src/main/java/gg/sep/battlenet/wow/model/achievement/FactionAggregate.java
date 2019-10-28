@@ -20,29 +20,22 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model;
+package gg.sep.battlenet.wow.model.achievement;
 
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
-import gg.sep.battlenet.model.BattleNetEntity;
+import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 
 /**
- * Abstract implementation of {@link WoWIndexItem}, which implements the core getters for index items.
+ * Represents point and quantity aggregates by faction for an {@link AchievementCategory}.
  *
- * @param <T> The type of the full item that will be returned by a call to {@link Keyed#getFullItem()}.
+ * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
-@Setter(AccessLevel.PRIVATE)
-@Log4j2
-@EqualsAndHashCode(callSuper = false)
-public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends AbstractKeyedEntity<T>
-    implements WoWIndexItem<T>, JsonSerializable {
-    private Long id;
-    @EqualsAndHashCode.Exclude
-    private String name;
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
+public class FactionAggregate extends AbstractBattleNetEntity implements JsonSerializable {
+    private Long quantity;
+    private Long points;
 }

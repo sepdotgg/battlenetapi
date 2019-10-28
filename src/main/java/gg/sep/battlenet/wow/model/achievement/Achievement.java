@@ -20,29 +20,39 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model;
+package gg.sep.battlenet.wow.model.achievement;
 
-import lombok.AccessLevel;
+import com.google.gson.annotations.SerializedName;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 
-import gg.sep.battlenet.model.BattleNetEntity;
+import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.wow.model.HasMedia;
+import gg.sep.battlenet.wow.model.WoWMediaLink;
 
 /**
- * Abstract implementation of {@link WoWIndexItem}, which implements the core getters for index items.
+ * Represents the full WoW Achievement API entity.
  *
- * @param <T> The type of the full item that will be returned by a call to {@link Keyed#getFullItem()}.
+ * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
-@Setter(AccessLevel.PRIVATE)
-@Log4j2
-@EqualsAndHashCode(callSuper = false)
-public abstract class AbstractWoWIndexItem<T extends BattleNetEntity> extends AbstractKeyedEntity<T>
-    implements WoWIndexItem<T>, JsonSerializable {
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+public class Achievement extends AbstractBattleNetEntity implements HasMedia, JsonSerializable {
+    @EqualsAndHashCode.Include
     private Long id;
-    @EqualsAndHashCode.Exclude
+    private AchievementCategoryIndexItem category;
     private String name;
+    private String description;
+    private Long points;
+    private AchievementCriteria criteria;
+
+    @SerializedName("display_order")
+    private Long displayOrder;
+    @SerializedName("is_account_wide")
+    private Boolean isAccountWide;
+    @SerializedName("next_achievement")
+    private AchievementIndexItem nextAchievement;
+    @SerializedName("media")
+    private WoWMediaLink mediaLink;
 }
