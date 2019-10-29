@@ -22,39 +22,18 @@
 
 package gg.sep.battlenet.wow.model.specialization;
 
-import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.HasMedia;
-import gg.sep.battlenet.wow.model.WoWMediaLink;
-import gg.sep.battlenet.wow.model.playableclass.PlayableClassIndexItem;
-import gg.sep.battlenet.wow.model.talent.TalentIndexItem;
-import gg.sep.battlenet.wow.model.talent.TalentTier;
 
 /**
- * Represents the full WoW Playable Specialization API entity.
- *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * Represents a Specialization Role present on the {@link PlayableSpecialization} entity.
  */
 @Getter
-public class PlayableSpecialization extends AbstractBattleNetEntity implements HasMedia, JsonSerializable {
-    private Long id;
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
+public class SpecializationRole extends AbstractBattleNetEntity implements JsonSerializable {
+    private SpecRoleType type;
     private String name;
-    @SerializedName("playable_class")
-    private PlayableClassIndexItem playableClass;
-    @SerializedName("gender_description")
-    private GenderDescription genderDescription;
-    @SerializedName("talent_tiers")
-    private List<TalentTier> talentTiers;
-    @SerializedName("pvp_talents")
-    private List<TalentIndexItem> pvpTalents;
-    private SpecializationRole role;
-
-    @SerializedName("media")
-    private WoWMediaLink mediaLink;
-
 }
