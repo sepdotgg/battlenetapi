@@ -27,38 +27,38 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 import gg.sep.battlenet.wow.model.WoWMedia;
-import gg.sep.battlenet.wow.model.playableclass.PlayableClass;
-import gg.sep.battlenet.wow.model.playableclass.PlayableClassIndex;
+import gg.sep.battlenet.wow.model.azerite.AzeriteEssence;
+import gg.sep.battlenet.wow.model.azerite.AzeriteEssenceIndex;
 
 /**
- * Retrofit interface which defines the endpoints available in the Battle.net WoW Playable Class API.
+ * Retrofit interface which defines the endpoints available in the Battle.net WoW Azerite Essence API.
  *
- * The class which implements these API calls is {@link gg.sep.battlenet.wow.api.PlayableClassAPI}.
+ * The class which implements these API calls is {@link gg.sep.battlenet.wow.api.AzeriteEssenceAPI}.
  *
  * <p>API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-public interface PlayableClassEndpoint {
+public interface AzeriteEssenceEndpoint {
 
     /**
-     * Retrieves an index of all WoW playable classes.
+     * Retrieves an index of WoW Azerite Essences.
      * @return Retrofit call which will retrieve the entity
      */
-    @GET("data/wow/playable-class/index?addNamespace=static")
-    Call<PlayableClassIndex> getPlayableClasses();
+    @GET("data/wow/azerite-essence/index?addNamespace=static")
+    Call<AzeriteEssenceIndex> getAzeriteEssences();
 
     /**
-     * Retrieves the WoW playable class for the specified Playable Class ID.
-     * @param id ID of the WoW playable class.
+     * Retrieves the WoW azerite essence for the specified Azerite Essence ID.
+     * @param id ID of the WoW azerite essence.
      * @return Retrofit call which will retrieve the entity.
      */
-    @GET("data/wow/playable-class/{id}?addNamespace=static")
-    Call<PlayableClass> getPlayableClass(@Path("id") long id);
+    @GET("data/wow/azerite-essence/{id}?addNamespace=static")
+    Call<AzeriteEssence> getAzeriteEssence(@Path("id") long id);
 
     /**
-     * Retrieves the WoW playable class media for the specified PlayableClass ID.
-     * @param id ID of the WoW playable class.
+     * Retrieves the WoW Azerite Essence media for the specified Azerite Essence ID.
+     * @param id ID of the WoW Azerite Essence.
      * @return Retrofit call which will retrieve the entity.
      */
-    @GET("data/wow/media/playable-class/{id}?addNamespace=static")
-    Call<WoWMedia> getPlayableClassMedia(@Path("id") long id);
+    @GET("data/wow/media/azerite-essence/{id}?addNamespace=static")
+    Call<WoWMedia> getAzeriteEssenceMedia(@Path("id") long id);
 }

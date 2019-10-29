@@ -76,7 +76,7 @@ public class PlayableClassAPI extends WoWAPI {
     }
 
     /**
-     * Gets a WoW Playable Class Media entity for the specified Achievement {@code id}.
+     * Gets a WoW Playable Class Media entity for the specified Playable Class {@code id}.
      * @param id ID of the WoW Playable Class.
      * @return {@link Ok} containing the Playable Class Media if the API call was successful,
      *         otherwise an {@link Err} containing the error message.

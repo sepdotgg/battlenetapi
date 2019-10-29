@@ -46,7 +46,7 @@ public interface PlayableSpecializationEndpoint {
     Call<PlayableSpecializationIndex> getPlayableSpecializations();
 
     /**
-     * Retrieves the WoW achievement for the specified Playable Class ID.
+     * Retrieves the WoW playable class for the specified Playable Class ID.
      * @param id ID of the WoW playable class.
      * @return Retrofit call which will retrieve the entity.
      */

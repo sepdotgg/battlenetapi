@@ -72,7 +72,7 @@ public interface AchievementEndpoint {
     Call<AchievementCategory> getAchievementCategory(@Path("id") long id);
 
     /**
-     * Retrieves the WoW achievement category for the specified Achievement Category ID.
+     * Retrieves the WoW achievement category media for the specified Achievement Category ID.
      * @param id ID of the WoW achievement category.
      * @return Retrofit call which will retrieve the entity.
      */
