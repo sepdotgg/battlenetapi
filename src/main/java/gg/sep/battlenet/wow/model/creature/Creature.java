@@ -25,6 +25,7 @@ package gg.sep.battlenet.wow.model.creature;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
@@ -36,6 +37,7 @@ import gg.sep.battlenet.model.JsonSerializable;
  * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
 public class Creature extends AbstractBattleNetEntity implements JsonSerializable {
     private Long id;
     private String name;
