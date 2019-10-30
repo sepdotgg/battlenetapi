@@ -20,13 +20,36 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.specialization;
+package gg.sep.battlenet.wow.endpoint;
 
-import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.AbstractGenderStrings;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
+import gg.sep.battlenet.wow.model.title.Title;
+import gg.sep.battlenet.wow.model.title.TitleIndex;
 
 /**
- * Contains the localized descriptions for male/female of a {@link PlayableSpecialization}.
+ * Retrofit interface which defines the endpoints available in the Battle.net WoW Title API.
+ *
+ * The class which implements these API calls is {@link gg.sep.battlenet.wow.api.TitleAPI}.
+ *
+ * <p>API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-public class GenderDescription extends AbstractGenderStrings implements JsonSerializable {
+public interface TitleEndpoint {
+
+    /**
+     * Retrieves an index of WoW Titles.
+     * @return Retrofit call which will retrieve the entity
+     */
+    @GET("data/wow/title/index?addNamespace=static")
+    Call<TitleIndex> getTitles();
+
+    /**
+     * Retrieves the WoW title for the specified Title ID.
+     * @param id ID of the WoW title.
+     * @return Retrofit call which will retrieve the entity.
+     */
+    @GET("data/wow/title/{id}?addNamespace=static")
+    Call<Title> getTitle(@Path("id") long id);
 }

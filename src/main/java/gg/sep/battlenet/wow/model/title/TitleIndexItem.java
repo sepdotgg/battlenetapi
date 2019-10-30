@@ -20,13 +20,28 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.playableclass;
+package gg.sep.battlenet.wow.model.title;
+
+import lombok.Getter;
 
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.AbstractGenderStrings;
+import gg.sep.battlenet.wow.model.AbstractWoWIndexItem;
+import gg.sep.result.Result;
 
 /**
- * Contains the localized names for male/female of a {@link PlayableClass}.
+ * Represents the minimal index variation of WoW Title API entity, which is contained in
+ * {@link TitleIndex}.
+ *
+ * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-public class GenderName extends AbstractGenderStrings implements JsonSerializable {
+@Getter
+public class TitleIndexItem extends AbstractWoWIndexItem<Title> implements JsonSerializable {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Result<Title, String> getFullItem() {
+        return getFullItem(Title.class);
+    }
 }

@@ -20,42 +20,24 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.specialization;
-
-import java.util.List;
+package gg.sep.battlenet.wow.model.title;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.GenderDescription;
-import gg.sep.battlenet.wow.model.HasMedia;
-import gg.sep.battlenet.wow.model.WoWMediaLink;
-import gg.sep.battlenet.wow.model.playableclass.PlayableClassIndexItem;
-import gg.sep.battlenet.wow.model.talent.TalentIndexItem;
-import gg.sep.battlenet.wow.model.talent.TalentTier;
+import gg.sep.battlenet.wow.model.GenderName;
 
 /**
- * Represents the full WoW Playable Specialization API entity.
+ * Represents the full WoW Title API entity.
  *
  * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
-public class PlayableSpecialization extends AbstractBattleNetEntity implements HasMedia, JsonSerializable {
+public class Title extends AbstractBattleNetEntity implements JsonSerializable {
     private Long id;
     private String name;
-    @SerializedName("playable_class")
-    private PlayableClassIndexItem playableClass;
-    @SerializedName("gender_description")
-    private GenderDescription genderDescription;
-    @SerializedName("talent_tiers")
-    private List<TalentTier> talentTiers;
-    @SerializedName("pvp_talents")
-    private List<TalentIndexItem> pvpTalents;
-    private SpecializationRole role;
-
-    @SerializedName("media")
-    private WoWMediaLink mediaLink;
-
+    @SerializedName("gender_name")
+    private GenderName genderName;
 }

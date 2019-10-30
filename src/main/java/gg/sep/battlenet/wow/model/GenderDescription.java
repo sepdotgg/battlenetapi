@@ -20,35 +20,13 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.playableclass;
+package gg.sep.battlenet.wow.model;
 
-import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
-
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.GenderName;
-import gg.sep.battlenet.wow.model.HasMedia;
-import gg.sep.battlenet.wow.model.WoWMediaLink;
-import gg.sep.battlenet.wow.model.powertype.PowerTypeIndexItem;
-import gg.sep.battlenet.wow.model.specialization.PlayableSpecializationIndexItem;
 
 /**
- * Represents the full WoW Playable Class API entity.
- *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * Contains the localized descriptions for male/female of a several different entities,
+ * for example the {@link gg.sep.battlenet.wow.model.specialization.PlayableSpecialization} entity.
  */
-@Getter
-public class PlayableClass extends AbstractBattleNetEntity implements HasMedia, JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("gender_name")
-    private GenderName genderName;
-    @SerializedName("power_type")
-    private PowerTypeIndexItem powerType;
-    private List<PlayableSpecializationIndexItem> specializations;
-    @SerializedName("media")
-    private WoWMediaLink mediaLink;
+public class GenderDescription extends AbstractGenderStrings implements JsonSerializable {
 }
