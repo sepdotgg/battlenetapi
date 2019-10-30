@@ -22,45 +22,25 @@
 
 package gg.sep.battlenet.wow.model.pet;
 
-import java.net.URL;
-import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
-import lombok.Getter;
-
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.creature.CreatureDisplay;
+import gg.sep.battlenet.wow.model.AbstractKeyedEntity;
+import gg.sep.result.Err;
+import gg.sep.result.Result;
 
 /**
- * Represents the full WoW Pet API entity.
+ * Represents one of the Pet Ability index items that will (eventually) exist on the Pet Ability index API,
+ * and currently exists as a member of the {@link PetAbilitiesItem} entity.
  *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * The Pet Ability API is not yet implemented, so {@link #getFullItem()}} will currently return an error.
+ * See the Migration Status:
+ * https://develop.battle.net/documentation/guides/community-apis-world-of-warcraft-community-api-migration-status
  */
-@Getter
-public class Pet extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("creature_display")
-    private CreatureDisplay creatureDisplay;
-    private String description;
+public class PetAbilityIndexItem extends AbstractKeyedEntity<PetAbility> implements JsonSerializable {
 
-    private PetSource source;
-
-    @SerializedName("battle_pet_type")
-    private BattlePetTypeItem battlePetType;
-
-    private List<PetAbilitiesItem> abilities;
-
-    @SerializedName("is_capturable")
-    private Boolean isCapturable;
-    @SerializedName("is_tradable")
-    private Boolean isTradable;
-    @SerializedName("is_battlepet")
-    private Boolean isBattlepet;
-    @SerializedName("is_alliance_only")
-    private Boolean isAllianceOnly;
-    @SerializedName("is_horde_only")
-    private Boolean isHordeOnly;
-    private URL icon;
+    /**
+     * {@inheritDoc}
+     */
+    public Result<PetAbility, String> getFullItem() {
+        return Err.of("The Pet Ability API is not yet implemented by Blizzard.");
+    }
 }

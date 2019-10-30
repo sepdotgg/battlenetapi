@@ -22,45 +22,18 @@
 
 package gg.sep.battlenet.wow.model.pet;
 
-import java.net.URL;
-import java.util.List;
-
-import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.creature.CreatureDisplay;
 
 /**
- * Represents the full WoW Pet API entity.
+ * Represents a Pet Ability from the WoW Battle.net API.
  *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * NOTE: This API item is not yet implemented, so there are no fields.
+ * See the Migration Status:
+ * https://develop.battle.net/documentation/guides/community-apis-world-of-warcraft-community-api-migration-status
  */
 @Getter
-public class Pet extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("creature_display")
-    private CreatureDisplay creatureDisplay;
-    private String description;
-
-    private PetSource source;
-
-    @SerializedName("battle_pet_type")
-    private BattlePetTypeItem battlePetType;
-
-    private List<PetAbilitiesItem> abilities;
-
-    @SerializedName("is_capturable")
-    private Boolean isCapturable;
-    @SerializedName("is_tradable")
-    private Boolean isTradable;
-    @SerializedName("is_battlepet")
-    private Boolean isBattlepet;
-    @SerializedName("is_alliance_only")
-    private Boolean isAllianceOnly;
-    @SerializedName("is_horde_only")
-    private Boolean isHordeOnly;
-    private URL icon;
+public class PetAbility extends AbstractBattleNetEntity implements JsonSerializable {
 }

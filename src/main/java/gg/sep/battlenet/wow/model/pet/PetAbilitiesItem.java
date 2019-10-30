@@ -22,45 +22,21 @@
 
 package gg.sep.battlenet.wow.model.pet;
 
-import java.net.URL;
-import java.util.List;
-
 import com.google.gson.annotations.SerializedName;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
-import gg.sep.battlenet.wow.model.creature.CreatureDisplay;
 
 /**
- * Represents the full WoW Pet API entity.
- *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * Represents one of the Pet Abilities items present on the {@link Pet} entity.
  */
 @Getter
-public class Pet extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("creature_display")
-    private CreatureDisplay creatureDisplay;
-    private String description;
-
-    private PetSource source;
-
-    @SerializedName("battle_pet_type")
-    private BattlePetTypeItem battlePetType;
-
-    private List<PetAbilitiesItem> abilities;
-
-    @SerializedName("is_capturable")
-    private Boolean isCapturable;
-    @SerializedName("is_tradable")
-    private Boolean isTradable;
-    @SerializedName("is_battlepet")
-    private Boolean isBattlepet;
-    @SerializedName("is_alliance_only")
-    private Boolean isAllianceOnly;
-    @SerializedName("is_horde_only")
-    private Boolean isHordeOnly;
-    private URL icon;
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
+public class PetAbilitiesItem extends AbstractBattleNetEntity implements JsonSerializable {
+    private PetAbilityIndexItem ability;
+    private Long slot;
+    @SerializedName("required_level")
+    private Long requiredLevel;
 }
