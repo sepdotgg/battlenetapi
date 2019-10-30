@@ -20,20 +20,44 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.mount;
+package gg.sep.battlenet.wow.model.pet;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import java.net.URL;
+
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.wow.model.creature.CreatureDisplay;
 
 /**
- * Represents a Mount Source present on the {@link Mount} entity.
+ * Represents the full WoW Pet API entity.
+ *
+ * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
-@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-public class MountSource extends AbstractBattleNetEntity implements JsonSerializable {
-    private MountSourceType type;
+public class Pet extends AbstractBattleNetEntity implements JsonSerializable {
+    private Long id;
     private String name;
+    @SerializedName("creature_display")
+    private CreatureDisplay creatureDisplay;
+    private String description;
+
+    private PetSource source;
+
+    @SerializedName("battle_pet_type")
+    private BattlePetTypeItem battlePetType;
+
+    @SerializedName("is_capturable")
+    private Boolean isCapturable;
+    @SerializedName("is_tradable")
+    private Boolean isTradable;
+    @SerializedName("is_battlepet")
+    private Boolean isBattlepet;
+    @SerializedName("is_alliance_only")
+    private Boolean isAllianceOnly;
+    @SerializedName("is_horde_only")
+    private Boolean isHordeOnly;
+    private URL icon;
 }

@@ -20,19 +20,20 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.mount;
+package gg.sep.battlenet.wow.model.pet;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import lombok.Getter;
+
+import gg.sep.battlenet.model.AbstractBattleNetEntity;
+import gg.sep.battlenet.model.JsonSerializable;
 
 /**
- * Represents the types of Mount Source types present on {@link MountSource}.
+ * Represents Battle Pet Type present on the {@link Pet} entity.
  */
-public enum MountSourceType {
-    ACHIEVEMENT,
-    WORLDEVENT,
-    PROMOTION,
-    VENDOR,
-    TCG,
-    PROFESSION,
-    PETSTORE,
-    QUEST,
-    DROP
+@Getter
+@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
+public class BattlePetTypeItem extends AbstractBattleNetEntity implements JsonSerializable {
+    private String name;
+    private BattlePetType type;
 }

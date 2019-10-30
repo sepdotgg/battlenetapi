@@ -20,19 +20,23 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.mount;
+package gg.sep.battlenet.wow.model.pet;
+
+import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
+import lombok.Getter;
+
+import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.wow.model.AbstractWoWIndex;
 
 /**
- * Represents the types of Mount Source types present on {@link MountSource}.
+ * Represents the response type from by the Pet Index API.
+ *
+ * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-public enum MountSourceType {
-    ACHIEVEMENT,
-    WORLDEVENT,
-    PROMOTION,
-    VENDOR,
-    TCG,
-    PROFESSION,
-    PETSTORE,
-    QUEST,
-    DROP
+@Getter
+public class PetIndex extends AbstractWoWIndex<PetIndexItem> implements JsonSerializable {
+    @SerializedName("pets")
+    private List<PetIndexItem> items;
 }

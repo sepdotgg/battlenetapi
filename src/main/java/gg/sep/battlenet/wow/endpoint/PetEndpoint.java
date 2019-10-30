@@ -20,19 +20,36 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.mount;
+package gg.sep.battlenet.wow.endpoint;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
+import gg.sep.battlenet.wow.model.pet.Pet;
+import gg.sep.battlenet.wow.model.pet.PetIndex;
 
 /**
- * Represents the types of Mount Source types present on {@link MountSource}.
+ * Retrofit interface which defines the endpoints available in the Battle.net WoW Pet API.
+ *
+ * The class which implements these API calls is {@link gg.sep.battlenet.wow.api.PetAPI}.
+ *
+ * <p>API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-public enum MountSourceType {
-    ACHIEVEMENT,
-    WORLDEVENT,
-    PROMOTION,
-    VENDOR,
-    TCG,
-    PROFESSION,
-    PETSTORE,
-    QUEST,
-    DROP
+public interface PetEndpoint {
+
+    /**
+     * Retrieves an index of WoW Pets.
+     * @return Retrofit call which will retrieve the entity
+     */
+    @GET("data/wow/pet/index?addNamespace=static")
+    Call<PetIndex> getPets();
+
+    /**
+     * Retrieves the WoW pet for the specified Pet ID.
+     * @param id ID of the WoW pet.
+     * @return Retrofit call which will retrieve the entity.
+     */
+    @GET("data/wow/pet/{id}?addNamespace=static")
+    Call<Pet> getPet(@Path("id") long id);
 }

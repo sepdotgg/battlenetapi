@@ -20,19 +20,20 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.mount;
+package gg.sep.battlenet.wow.model.pet;
 
 /**
- * Represents the types of Mount Source types present on {@link MountSource}.
+ * Represents the types of Pet Source Types present on {@link BattlePetTypeItem}.
  */
-public enum MountSourceType {
-    ACHIEVEMENT,
-    WORLDEVENT,
-    PROMOTION,
-    VENDOR,
-    TCG,
-    PROFESSION,
-    PETSTORE,
-    QUEST,
-    DROP
+public enum BattlePetType {
+    FLYING,
+    DRAGONKIN,
+    MAGIC,
+    AQUATIC,
+    ELEMENTAL,
+    HUMANOID,
+    UNDEAD,
+    CRITTER,
+    BEAST,
+    MECHANICAL
 }
