@@ -22,16 +22,11 @@
 
 package gg.sep.battlenet.wow.model;
 
-import java.net.URL;
-
-import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
-import retrofit2.Call;
 
 import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.BattleNetEntity;
-import gg.sep.battlenet.wow.endpoint.KeyFullItemEndpoint;
 import gg.sep.result.Err;
 import gg.sep.result.Ok;
 import gg.sep.result.Result;
@@ -46,7 +41,7 @@ import gg.sep.result.Result;
 @Log4j2
 public abstract class AbstractKeyedEntity<T extends BattleNetEntity> extends AbstractBattleNetEntity implements Keyed<T> {
 
-    private WoWKey key;
+    private WoWKey<T> key;
 
     /**
      * Helper method that sub-classes can use in their own {@link #getFullItem()} implementation
@@ -60,22 +55,6 @@ public abstract class AbstractKeyedEntity<T extends BattleNetEntity> extends Abs
      *         containing the error message.
      */
     protected Result<T, String> getFullItem(final Class<T> clazz) {
-        final URL fullUrl = key.getHref();
-        final KeyFullItemEndpoint endpoint = getBattleNet().getRetrofit().create(KeyFullItemEndpoint.class);
-
-        final Call<JsonElement> call = endpoint.getFullItem(fullUrl.toExternalForm());
-        try {
-            final JsonElement jsonElement = call.execute().body();
-            final T entity = getBattleNet().getJsonParser().fromJson(jsonElement, clazz);
-            return nullableResult(entity, "Error retrieving the full item %s", call.request().url());
-        } catch (final Exception e) {
-            log.error(e);
-            return nullableResult(null, "Exception when attempting to get Full Item. url=%s, exception=%s",
-                call.request().url(), e);
-        }
-    }
-
-    private Result<T, String> nullableResult(final T ok, final String err, final Object... args) {
-        return (ok == null) ? Err.of(String.format(err, args)) : Ok.of(ok);
+        return key.getItem(clazz);
     }
 }
