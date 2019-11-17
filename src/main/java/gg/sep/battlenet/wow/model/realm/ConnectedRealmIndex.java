@@ -37,6 +37,6 @@ import gg.sep.battlenet.wow.model.AbstractWoWKeyIndex;
  */
 @Getter
 public class ConnectedRealmIndex extends AbstractWoWKeyIndex<ConnectedRealmKey> implements JsonSerializable {
-    @SerializedName("regions")
+    @SerializedName("connected_realms")
     private List<ConnectedRealmKey> items;
 }

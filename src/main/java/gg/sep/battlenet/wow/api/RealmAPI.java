@@ -31,6 +31,7 @@ import gg.sep.battlenet.wow.endpoint.RealmEndpoint;
 import gg.sep.battlenet.wow.model.realm.ConnectedRealm;
 import gg.sep.battlenet.wow.model.realm.ConnectedRealmIndex;
 import gg.sep.battlenet.wow.model.realm.ConnectedRealmKey;
+import gg.sep.battlenet.wow.model.realm.Realm;
 import gg.sep.battlenet.wow.model.realm.RealmIndex;
 import gg.sep.battlenet.wow.model.realm.RealmIndexItem;
 import gg.sep.result.Err;
@@ -63,6 +64,17 @@ public class RealmAPI extends WoWAPI {
     public Result<List<RealmIndexItem>, String> getRealms() {
         final Call<RealmIndex> call = realmEndpoint.getRealms();
         return executeIndexCall(call);
+    }
+
+    /**
+     * Gets a WoW Realm entity for the specified Realm {@code slug}.
+     * @param slug Slug of the WoW Realm.
+     * @return {@link Ok} containing the Realm if the API call was successful,
+     *         otherwise an {@link Err} containing the error message.
+     */
+    public Result<Realm, String> getRealm(final String slug) {
+        final Call<Realm> call = realmEndpoint.getRealm(slug);
+        return executeCall(call);
     }
 
     /**
