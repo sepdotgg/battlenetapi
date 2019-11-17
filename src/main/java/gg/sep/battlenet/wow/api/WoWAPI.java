@@ -31,6 +31,8 @@ import gg.sep.battlenet.api.BattleNetAPI;
 import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.wow.model.WoWIndex;
 import gg.sep.battlenet.wow.model.WoWIndexItem;
+import gg.sep.battlenet.wow.model.WoWKey;
+import gg.sep.battlenet.wow.model.WoWKeyIndex;
 import gg.sep.result.Result;
 
 /**
@@ -65,5 +67,14 @@ public abstract class WoWAPI extends BattleNetAPI {
 
         final Result<I, String> indexResponse = executeCall(call);
         return indexResponse.map(WoWIndex::getItems);
+    }
+
+    /**
+     * Identical to {@link #executeIndexCall(Call)}, but for {@link WoWKeyIndex}.
+     */
+    protected <I extends WoWKeyIndex<E>, E extends WoWKey<T>, T extends BattleNetEntity>
+        Result<List<E>, String> executeKeyIndexCall(final Call<I> call) {
+        final Result<I, String> indexResponse = executeCall(call);
+        return indexResponse.map(WoWKeyIndex::getItems);
     }
 }

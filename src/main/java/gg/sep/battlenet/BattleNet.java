@@ -21,6 +21,10 @@
  */
 package gg.sep.battlenet;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.ZoneId;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Builder;
@@ -32,6 +36,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import gg.sep.battlenet.adapter.BattleNetEntityPostProcessor;
+import gg.sep.battlenet.adapter.DurationDeserializer;
+import gg.sep.battlenet.adapter.InstantDeserializer;
+import gg.sep.battlenet.adapter.ZoneIdDeserializer;
 import gg.sep.battlenet.api.BattleNetAPIProxy;
 import gg.sep.battlenet.auth.api.OAuthAPI;
 import gg.sep.battlenet.interceptor.BattleNetInterceptor;
@@ -124,6 +131,9 @@ public final class BattleNet {
         return new GsonBuilder()
             .registerTypeAdapterFactory(new BattleNetEntityPostProcessor(this))
             .registerTypeAdapter(TalentTier.class, new TalentTierDeserializer(this))
+            .registerTypeAdapter(ZoneId.class, new ZoneIdDeserializer())
+            .registerTypeAdapter(Instant.class, new InstantDeserializer())
+            .registerTypeAdapter(Duration.class, new DurationDeserializer())
             .create();
     }
 

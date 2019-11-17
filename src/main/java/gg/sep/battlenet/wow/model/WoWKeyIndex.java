@@ -20,27 +20,27 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.reputation;
+package gg.sep.battlenet.wow.model;
 
-import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.Getter;
+import java.util.List;
 
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
+import gg.sep.battlenet.model.BattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
 
 /**
- * Represents an individual Reputation Tier item within the {@link ReputationTiers} API entity.
+ * Represents an <em>index</em> API response from the Battle.net WoW API.
  *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * <p>The entity will contains any number of {@code T} key index items in the {@link #getItems()} field.
+ *
+ * <p>Each key index response will have a different field name for the items. Implementing classes should
+ * ensure that field correctly maps to {@link #getItems()}.
+ *
+ * @param <T> The type of index key item that is contained in the index response.
  */
-@Getter
-@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-public class ReputationTier extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("min_value")
-    private Long minValue;
-    @SerializedName("max_value")
-    private Long maxValue;
+public interface WoWKeyIndex<T extends WoWKey> extends BattleNetEntity, JsonSerializable {
+    /**
+     * Returns the list of key index items contained on the index entity response.
+     * @return List of key index items contained on the index entity response.
+     */
+    List<T> getItems();
 }

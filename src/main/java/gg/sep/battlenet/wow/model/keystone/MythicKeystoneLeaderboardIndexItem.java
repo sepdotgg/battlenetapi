@@ -20,27 +20,28 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.reputation;
+package gg.sep.battlenet.wow.model.keystone;
 
-import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
 import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.wow.model.AbstractWoWIndexItem;
+import gg.sep.result.Result;
 
 /**
- * Represents an individual Reputation Tier item within the {@link ReputationTiers} API entity.
+ * Represents the minimal index variation of WoW Mythic Keystone Leaderboard API entity, which is contained in
+ * {@link MythicKeystoneLeaderboardIndex}.
  *
  * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
 @Getter
-@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-public class ReputationTier extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("min_value")
-    private Long minValue;
-    @SerializedName("max_value")
-    private Long maxValue;
+public class MythicKeystoneLeaderboardIndexItem extends AbstractWoWIndexItem<MythicKeystoneLeaderboard> implements JsonSerializable {
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Result<MythicKeystoneLeaderboard, String> getFullItem() {
+        return getFullItem(MythicKeystoneLeaderboard.class);
+    }
 }

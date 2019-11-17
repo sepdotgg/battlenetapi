@@ -20,27 +20,36 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.reputation;
+package gg.sep.battlenet.wow.endpoint;
 
-import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.Getter;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
-import gg.sep.battlenet.model.JsonSerializable;
+import gg.sep.battlenet.wow.model.region.Region;
+import gg.sep.battlenet.wow.model.region.RegionIndex;
 
 /**
- * Represents an individual Reputation Tier item within the {@link ReputationTiers} API entity.
+ * Retrofit interface which defines the endpoints available in the Battle.net WoW Region API.
  *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * The class which implements these API calls is {@link gg.sep.battlenet.wow.api.RegionAPI}.
+ *
+ * <p>API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
  */
-@Getter
-@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-public class ReputationTier extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("min_value")
-    private Long minValue;
-    @SerializedName("max_value")
-    private Long maxValue;
+public interface RegionEndpoint {
+
+    /**
+     * Retrieves an index of WoW Regions.
+     * @return Retrofit call which will retrieve the entity
+     */
+    @GET("data/wow/region/index?addNamespace=dynamic")
+    Call<RegionIndex> getRegions();
+
+    /**
+     * Retrieves the WoW realm for the specified WoW Region ID.
+     * @param id ID of the WoW region.
+     * @return Retrofit call which will retrieve the entity.
+     */
+    @GET("data/wow/region/{id}?addNamespace=dynamic")
+    Call<Region> getRegion(@Path("id") int id);
 }

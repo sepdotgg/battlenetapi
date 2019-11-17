@@ -20,27 +20,12 @@
  * SOFTWARE.
  */
 
-package gg.sep.battlenet.wow.model.reputation;
-
-import com.google.gson.annotations.SerializedName;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import lombok.Getter;
-
-import gg.sep.battlenet.model.AbstractBattleNetEntity;
-import gg.sep.battlenet.model.JsonSerializable;
+package gg.sep.battlenet.wow.model.realm;
 
 /**
- * Represents an individual Reputation Tier item within the {@link ReputationTiers} API entity.
- *
- * API Reference: https://develop.battle.net/documentation/api-reference/world-of-warcraft-game-data-api
+ * Represents the types of Realm Types present on {@link ConnectedRealmStatus}.
  */
-@Getter
-@SuppressFBWarnings("UWF_UNWRITTEN_FIELD")
-public class ReputationTier extends AbstractBattleNetEntity implements JsonSerializable {
-    private Long id;
-    private String name;
-    @SerializedName("min_value")
-    private Long minValue;
-    @SerializedName("max_value")
-    private Long maxValue;
+public enum StatusType {
+    UP,
+    DOWN
 }

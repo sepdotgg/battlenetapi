@@ -42,6 +42,8 @@ import gg.sep.result.Result;
  * Contains a permalink to the full version of a {@link gg.sep.battlenet.model.BattleNetEntity}
  * for the WoW Battle.net API. Making an API call to the URL in {@link #getHref()} will produce
  * the full entity.
+ *
+ * @param <T> The type of item that is contained in the key response.
  */
 @Getter
 @Setter(AccessLevel.PRIVATE)
